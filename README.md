@@ -1,8 +1,8 @@
-# Dawnlight Android (based on Artemis)
+# Dawnlight Android (based on Artemis/Moonlight-noir)
 
 An open source client for [Apollo](https://github.com/ClassicOldSong/Apollo)/[Sunshine](https://github.com/LizardByte/Sunshine) based on Artemis(moonlight-noir).
 
-Dawnlight Android will allow you to stream your collection of games from your Windows PC to your Android device,
+Dawnlight Android will allow you to stream your collection of games from your Windows PC running Apollo/Sunshine to your Android device,
 whether in your own home or over the internet.
 
 # Features
@@ -40,6 +40,6 @@ whether in your own home or over the internet.
 
 ## Building
 * Install Android Studio and the Android NDK
-* Run ‘git submodule update --init --recursive’ from within moonlight-android/
-* In moonlight-android/, create a file called ‘local.properties’. Add an ‘ndk.dir=’ property to the local.properties file and set it equal to your NDK directory.
+* Run ‘git submodule update --init --recursive’ from within dawnlight-android/
+* In dawnlight-android/, create a file called ‘local.properties’. Add an ‘ndk.dir=’ property to the local.properties file and set it equal to your NDK directory.
 * Build the APK using Android Studio or gradle
