@@ -44,7 +44,7 @@
         android:required="false"/>
 
     <application
-        android:name=".DawnlightApplication"
+        android:name=".App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
         android:dataExtractionRules="@xml/backup_rules_s"
@@ -238,7 +238,7 @@
         <activity android:name=".DebugInfoActivity"
             android:launchMode="singleTask"/>
 
-        <!-- 无障碍 实体键盘 屏蔽某些快捷键 -->
+        <!-- Intercept keyboard service -->
         <service
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:name="com.dawnlight.KeyboardAccessibilityService"
