@@ -22,34 +22,34 @@ Quick-start guide: writing JVM/Robolectric unit tests for this repo
 
     → Tells Robolectric to merge `res/` into the unit-test APK so layout inflation works.
 
-2.  Test-class boilerplate  
+2. Test-class boilerplate
 
-    ```java
-    @Config(sdk = {33},
-            shadows = {
-                com.limelight.shadows.ShadowMoonBridge.class,
-                com.limelight.shadows.ShadowGameManager.class})
-    @RunWith(RobolectricTestRunner.class)
-    public class MyFeatureTest {
-        private Context ctx;
+   ```java
+   @Config(sdk = {33},
+           shadows = {
+               com.dawnlight.shadows.ShadowMoonBridge.class,
+               com.dawnlight.shadows.ShadowGameManager.class})
+   @RunWith(RobolectricTestRunner.class)
+   public class MyFeatureTest {
+       private Context ctx;
 
-        @BeforeClass
-        public static void silenceLogs() {
-            TestLogSuppressor.install();   // hides noisy “Invalid ID 0x00000000” spam
-        }
+       @BeforeClass
+       public static void silenceLogs() {
+           TestLogSuppressor.install();   // hides noisy “Invalid ID 0x00000000” spam
+       }
 
-        @Before
-        public void setUp() {
-            ctx = ApplicationProvider.getApplicationContext();
-            // extra prep (clear prefs, reset singletons, etc.)
-        }
+       @Before
+       public void setUp() {
+           ctx = ApplicationProvider.getApplicationContext();
+           // extra prep (clear prefs, reset singletons, etc.)
+       }
 
-        @Test
-        public void something_should_work() {
-            /* your assertions */
-        }
-    }
-    ```
+       @Test
+       public void something_should_work() {
+           /* your assertions */
+       }
+   }
+   ```
 
     • `@Config(sdk = {33})` makes Robolectric emulate Android 13 (matches `compileSdk 34` while staying stable).  
     • `shadows = …` suppresses native or platform calls:
@@ -115,7 +115,7 @@ Quick-start guide: writing JVM/Robolectric unit tests for this repo
     • **Product flavours** – tests are compiled once per flavour; don’t hard-code `BuildConfig.APPLICATION_ID`, use `context.getPackageName()` when needed.  
     • **Suppress noisy log spam** – call `TestLogSuppressor.install()` once per test-class (see above).  
 
-6.  Skeleton for a new test file  
+6. Skeleton for a new test file  
 
     ```
     app/
@@ -128,70 +128,71 @@ Quick-start guide: writing JVM/Robolectric unit tests for this repo
                   AwesomeFeatureTest.java   <-- new
     ```
 
-    ```java
-    package com.limelight.myfeature;
+   ```java
+   package com.dawnlight.myfeature;
 
-    import android.content.Context;
-    import androidx.test.core.app.ApplicationProvider;
-    import com.limelight.TestLogSuppressor;
-    import org.junit.*;
-    import org.robolectric.*;
-    import org.robolectric.annotation.Config;
+   import android.content.Context;
+   import androidx.test.core.app.ApplicationProvider;
+   import com.dawnlight.TestLogSuppressor;
+   import org.junit.*;
+   import org.robolectric.*;
+   import org.robolectric.annotation.Config;
 
-    @Config(sdk = {33},
-            shadows = {com.limelight.shadows.ShadowMoonBridge.class,
-                       com.limelight.shadows.ShadowGameManager.class})
-    @RunWith(RobolectricTestRunner.class)
-    public class AwesomeFeatureTest {
-        private Context ctx;
+   @Config(sdk = {33},
+           shadows = {com.dawnlight.shadows.ShadowMoonBridge.class,
+                      com.dawnlight.shadows.ShadowGameManager.class})
+   @RunWith(RobolectricTestRunner.class)
+   public class AwesomeFeatureTest {
+       private Context ctx;
 
-        @BeforeClass
-        public static void init() { TestLogSuppressor.install(); }
+       @BeforeClass
+       public static void init() { TestLogSuppressor.install(); }
 
-        @Before
-        public void setUp() { ctx = ApplicationProvider.getApplicationContext(); }
+       @Before
+       public void setUp() { ctx = ApplicationProvider.getApplicationContext(); }
 
-        @Test
-        public void newFeature_doesSomething() {
-            // Arrange
+       @Test
+       public void newFeature_doesSomething() {
+           // Arrange
 
-            // Act
+           // Act
 
-            // Assert
-            Assert.assertTrue(true);
-        }
-    }
-    ```
+           // Assert
+           Assert.assertTrue(true);
+       }
+   }
+   ```
 
 With the above conventions—Robolectric runner, shadows for native pieces, reflection resets,
 and resource-enabled unit tests—you can write new coverage quickly without needing the
 Android emulator or `androidTest` instrumentation.
 
 ```java
-    @Config(sdk = {33},
-            shadows = {
-                com.limelight.shadows.ShadowMoonBridge.class,
-                com.limelight.shadows.ShadowGameManager.class})
-    @RunWith(RobolectricTestRunner.class)
-    public class MyFeatureTest {
-        private Context ctx;
 
-        @BeforeClass
-        public static void silenceLogs() {
-            TestLogSuppressor.install();   // hides noisy “Invalid ID 0x00000000” spam
-        }
+@Config(sdk = {33},
+        shadows = {
+                com.dawnlight.shadows.ShadowMoonBridge.class,
+                com.dawnlight.shadows.ShadowGameManager.class})
+@RunWith(RobolectricTestRunner.class)
+public class MyFeatureTest {
+    private Context ctx;
 
-        @Before
-        public void setUp() {
-            ctx = ApplicationProvider.getApplicationContext();
-            // extra prep (clear prefs, reset singletons, etc.)
-        }
-
-        @Test
-        public void something_should_work() {
-            /* your assertions */
-        }
+    @BeforeClass
+    public static void silenceLogs() {
+        TestLogSuppressor.install();   // hides noisy “Invalid ID 0x00000000” spam
     }
+
+    @Before
+    public void setUp() {
+        ctx = ApplicationProvider.getApplicationContext();
+        // extra prep (clear prefs, reset singletons, etc.)
+    }
+
+    @Test
+    public void something_should_work() {
+        /* your assertions */
+    }
+}
 ```
 
 ```java
@@ -235,36 +236,43 @@ Android emulator or `androidTest` instrumentation.
 ```
 
 ```java
-    package com.limelight.myfeature;
+    package com.dawnlight.myfeature;
 
-    import android.content.Context;
-    import androidx.test.core.app.ApplicationProvider;
-    import com.limelight.TestLogSuppressor;
-    import org.junit.*;
-    import org.robolectric.*;
-    import org.robolectric.annotation.Config;
+import android.content.Context;
 
-    @Config(sdk = {33},
-            shadows = {com.limelight.shadows.ShadowMoonBridge.class,
-                       com.limelight.shadows.ShadowGameManager.class})
-    @RunWith(RobolectricTestRunner.class)
-    public class AwesomeFeatureTest {
-        private Context ctx;
+import androidx.test.core.app.ApplicationProvider;
 
-        @BeforeClass
-        public static void init() { TestLogSuppressor.install(); }
+import com.dawnlight.TestLogSuppressor;
 
-        @Before
-        public void setUp() { ctx = ApplicationProvider.getApplicationContext(); }
+import org.junit.*;
+import org.robolectric.*;
+import org.robolectric.annotation.Config;
 
-        @Test
-        public void newFeature_doesSomething() {
-            // Arrange
+@Config(sdk = {33},
+        shadows = {com.dawnlight.shadows.ShadowMoonBridge.class,
+                com.dawnlight.shadows.ShadowGameManager.class})
+@RunWith(RobolectricTestRunner.class)
+public class AwesomeFeatureTest {
+    private Context ctx;
 
-            // Act
-
-            // Assert
-            Assert.assertTrue(true);
-        }
+    @BeforeClass
+    public static void init() {
+        TestLogSuppressor.install();
     }
+
+    @Before
+    public void setUp() {
+        ctx = ApplicationProvider.getApplicationContext();
+    }
+
+    @Test
+    public void newFeature_doesSomething() {
+        // Arrange
+
+        // Act
+
+        // Assert
+        Assert.assertTrue(true);
+    }
+}
 ```

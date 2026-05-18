@@ -2,22 +2,22 @@
 -dontobfuscate
 
 # Our code
--keep class com.limelight.binding.input.evdev.* {*;}
+-keep class com.dawnlight.binding.input.evdev.* {*;}
 
 # KeyMapper - keep all VK_* fields for reflection
--keep class com.limelight.utils.KeyMapper {*;}
+-keep class com.dawnlight.utils.KeyMapper {*;}
 
 # KeyConfigHelper - keep classes and fields for Gson
--keep class com.limelight.utils.KeyConfigHelper {*;}
--keep class com.limelight.utils.KeyConfigHelper$ShortcutFile {*;}
--keep class com.limelight.utils.KeyConfigHelper$Shortcut {*;}
+-keep class com.dawnlight.utils.KeyConfigHelper {*;}
+-keep class com.dawnlight.utils.KeyConfigHelper$ShortcutFile {*;}
+-keep class com.dawnlight.utils.KeyConfigHelper$Shortcut {*;}
 
 # Profiles
--keep class com.limelight.profiles.ProfilesManager$ProfilesData {*;}
--keep class com.limelight.profiles.SettingsProfile {*;}
+-keep class com.dawnlight.profiles.ProfilesManager$ProfilesData {*;}
+-keep class com.dawnlight.profiles.SettingsProfile {*;}
 
 # Moonlight common
--keep class com.limelight.nvstream.jni.* {*;}
+-keep class com.dawnlight.nvstream.jni.* {*;}
 
 # Okio
 -keep class sun.misc.Unsafe {*;}
