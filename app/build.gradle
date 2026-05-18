@@ -118,6 +118,10 @@ android {
         }
     }
 
+    applicationVariants.all { variant ->
+        variant.resValue "string", "test", appConfig.test
+    }
+
     externalNativeBuild {
         ndkBuild {
             path "src/main/jni/Android.mk"
