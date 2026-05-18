@@ -1,0 +1,17 @@
+{
+  "appId": "com.dawnlight.root",
+  "appName": "Dawnlight",
+  "appNameRoot": "Dawnlight (Root)",
+  "appNameGame": "Dawnlight (Game)",
+  "appIdSuffix": ".dawnlight",
+  "appNameDebug": "Dawnlight (Debug)",
+  "appNameDebugRoot": "Dawnlight (Root Debug)",
+  "appNameDebugGame": "Dawnlight (Game Debug)",
+  "appIdSuffixDebug": ".dawnlight_debug",
+  "nameSpace": "com.dawnlight",
+  "appMinimumSDKLevel": 24,
+  "androidCompileSDKLevel": 37,
+  "androidTargetSDKLevel": 34,
+  "author": "Devostafa",
+  "github": "https://github.com/devostafa/Dawnlight-Android"
+}
