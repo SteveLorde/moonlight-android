@@ -119,7 +119,7 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.resValue "string", "test", appConfig.test
+        // variant.resValue "string", "test", appConfig.test
     }
 
     externalNativeBuild {
