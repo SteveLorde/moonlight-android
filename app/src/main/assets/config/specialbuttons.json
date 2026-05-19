@@ -1,14 +1,14 @@
 {
-  "desc": "游戏快捷菜单中快捷指令，键值参考PC端：https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes",
-  "data":[
+  "desc": "Shortcut commands in the game quick menu. Key values reference PC keycodes: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes",
+  "data": [
     {
-      "name": "自定义导入数据 (切换显示器)",
-      "desc": "data中的数值为上方链接获取的16进制code，例如ctrl为0xA2,alt为0xA4，shift为0xA0，f12为0x7B，win为0x5B",
-      "data":["0xA2","0xA4","0xA0","0x7B"]
+      "name": "Custom import data (switch monitor)",
+      "desc": "Values in 'data' are hexadecimal codes from the link above, e.g. ctrl = 0xA2, alt = 0xA4, shift = 0xA0, f12 = 0x7B, win = 0x5B",
+      "data": ["0xA2", "0xA4", "0xA0", "0x7B"]
     },
     {
-      "name": "自定义导入数据 (ALT+F4)",
-      "data":["0xA4","0x73"]
+      "name": "Custom import data (ALT+F4)",
+      "data": ["0xA4", "0x73"]
     }
   ]
 }
