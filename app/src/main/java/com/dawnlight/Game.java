@@ -8,6 +8,67 @@ import static com.dawnlight.utils.ExternalDisplayControlActivity.closeExternalDi
 import static com.dawnlight.utils.ServerHelper.getActiveDisplay;
 import static com.dawnlight.utils.ServerHelper.getSecondaryDisplay;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.PictureInPictureParams;
+import android.app.Service;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Outline;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.hardware.display.DisplayManager;
+import android.hardware.input.InputManager;
+import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.PersistableBundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.util.Rational;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.InputDevice;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.View;
+import android.view.View.OnGenericMotionListener;
+import android.view.View.OnSystemUiVisibilityChangeListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewOutlineProvider;
+import android.view.ViewParent;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
+
 import com.dawnlight.binding.PlatformBinding;
 import com.dawnlight.binding.audio.AndroidAudioRenderer;
 import com.dawnlight.binding.input.ControllerHandler;
@@ -15,10 +76,10 @@ import com.dawnlight.binding.input.GameInputDevice;
 import com.dawnlight.binding.input.KeyboardTranslator;
 import com.dawnlight.binding.input.capture.InputCaptureManager;
 import com.dawnlight.binding.input.capture.InputCaptureProvider;
-import com.dawnlight.binding.input.touch.AbsoluteTouchContext;
-import com.dawnlight.binding.input.touch.RelativeTouchContext;
 import com.dawnlight.binding.input.driver.UsbDriverService;
 import com.dawnlight.binding.input.evdev.EvdevListener;
+import com.dawnlight.binding.input.touch.AbsoluteTouchContext;
+import com.dawnlight.binding.input.touch.RelativeTouchContext;
 import com.dawnlight.binding.input.touch.TouchContext;
 import com.dawnlight.binding.input.touch.TrackpadContext;
 import com.dawnlight.binding.input.virtual_controller.VirtualController;
@@ -53,85 +114,24 @@ import com.dawnlight.utils.ShortcutHelper;
 import com.dawnlight.utils.SpinnerDialog;
 import com.dawnlight.utils.UiHelper;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.PictureInPictureParams;
-import android.app.Service;
-import android.content.ClipData;
-import android.content.ClipDescription;
-import android.content.ClipboardManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.graphics.Outline;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.hardware.display.DisplayManager;
-import android.hardware.input.InputManager;
-import android.media.AudioManager;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.PersistableBundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.util.Rational;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.InputDevice;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.View;
-import android.view.View.OnGenericMotionListener;
-import android.view.View.OnSystemUiVisibilityChangeListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewOutlineProvider;
-import android.view.ViewParent;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ImageButton;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.preference.PreferenceManager;
-
-import android.os.Looper;
-import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.ArrayDeque;
-
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
 
 
@@ -1052,12 +1052,12 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
             }
             else {
-                // If we don't have a reason to lock to portrait or landscape, allow any orientation
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
             }
         }
-        else {
-            // Lock to current orientation
+        if (prefConfig.autoOrientation) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        } else {
             if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
             } else {
@@ -1730,9 +1730,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                         formatCurrentTime(System.currentTimeMillis())
                 );
             }
-
         }
-
         finish();
     }
 

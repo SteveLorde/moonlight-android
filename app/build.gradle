@@ -101,7 +101,7 @@ android {
             resValue "string", "app_label_game", "Diana (Game)"
 
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             // To whomever is releasing/using an APK in release mode with
@@ -140,7 +140,7 @@ android {
             resValue "string", "app_label_game", "Artemis (Game)"
 
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
