@@ -9,9 +9,9 @@
   "appNameDebugGame": "Dawnlight (Game Debug)",
   "appIdSuffixDebug": ".dawnlight_debug",
   "nameSpace": "com.dawnlight",
-  "appMinimumSDKLevel": 24,
+  "appMinimumSDKLevel": 23,
   "androidCompileSDKLevel": 37,
-  "androidTargetSDKLevel": 34,
+  "androidTargetSDKLevel": 37,
   "author": "Devostafa",
   "github": "https://github.com/devostafa/Dawnlight-Android"
 }

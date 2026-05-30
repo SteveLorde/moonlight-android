@@ -32,7 +32,7 @@ android {
         root {
             // Android O has native mouse capture, so don't show the rooted
             // version to devices running O on the Play Store.
-            maxSdk 25
+            // maxSdk 25
 
             externalNativeBuild {
                 ndkBuild {
@@ -117,10 +117,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-
-    applicationVariants.all { variant ->
-        // variant.resValue "string", "test", appConfig.test
     }
 
     externalNativeBuild {

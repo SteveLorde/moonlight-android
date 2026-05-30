@@ -39,7 +39,7 @@
 
     <!-- Network test strings -->
     <string name="nettest_title_waiting">Testing Network Connection</string>
-    <string name="nettest_text_waiting">@string/app_label is testing your network connection to determine if any required ports are blocked.\n\nThis may take a few seconds…</string>
+    <string name="nettest_text_waiting">%1$s is testing your network connection to determine if any required ports are blocked.\n\nThis may take a few seconds…</string>
     <string name="nettest_title_done">Network Test Complete</string>
     <string name="nettest_text_success">Your network does not appear to be blocking @string/app_label. If you still have trouble connecting, check your PC\'s firewall settings.\n\nIf you are trying to stream over the Internet, install the Artemis Internet Hosting Tool on your PC and run the included Internet Streaming Tester to check your PC\'s Internet connection.</string>
     <string name="nettest_text_inconclusive">The network test could not be performed because none of @string/app_label\'s connection testing servers were reachable. Check your Internet connection or try again later.</string>
@@ -87,7 +87,7 @@
 	    Using remote desktop software can also cause this error. Try rebooting your machine or reinstalling GFE.
     </string>
     <string name="title_decoding_error">Video Decoder Crashed</string>
-    <string name="message_decoding_error">@string/app_label has crashed due to an incompatibility with this device\'s video decoder. Try adjusting the streaming settings if the crashes continue.</string>
+    <string name="message_decoding_error">%1$s has crashed due to an incompatibility with this device\'s video decoder. Try adjusting the streaming settings if the crashes continue.</string>
     <string name="title_decoding_reset">Video Settings Reset</string>
     <string name="message_decoding_reset">Your device\'s video decoder continues to crash at your selected streaming settings. Your streaming settings have been reset to default.</string>
     <string name="error_usb_prohibited">USB access is prohibited by your device administrator. Check your Knox or MDM settings.</string>
@@ -361,7 +361,7 @@
     <string name="pacing_smoothness">Prefer smoothest video (may significantly increase latency)</string>
 
 
-    <string name="keyboard_service_label">@string/app_label Physical keyboard</string>
+    <string name="keyboard_service_label">%1$s Physical keyboard</string>
     <string name="accessibility_description_text">Only used when physical keyboard shortcut were intercepted by system. In some systems, several keyboard shortcut are defind and used by the Android system, causing them not being able to be passed through to the host PC. Artemis will not look through your input, nor collecting your password, credit card number or any other private information.</string>
 
 
@@ -459,7 +459,7 @@
     <string name="summary_share_performance_logs">Share your performance with friends or the community</string>
     <string name="title_share_performance_logs_button">Share Performance Logs</string>
     <string name="title_software_update">Software Update</string>
-    <string name="summary_software_update">@string/app_label by @string/author - Visit GitHub Release to get latest version</string>
+    <string name="summary_software_update">%1$s by %2$s - Visit GitHub Release to get latest version</string>
     <string name="title_follow_update">Follow Update</string>
     <string name="summary_follow_update">Follow updates of Artemis with Obtainium</string>
     <string name="title_special_key_layout">Special Key Layout</string>
