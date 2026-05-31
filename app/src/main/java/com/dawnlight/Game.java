@@ -992,7 +992,6 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
         keyBoardLayoutController.show();
     }
 
-    //显示隐藏虚拟特殊按键
     public void toggleKeyboardController(){
         if (keyBoardController==null) {
             initKeyboardController();
@@ -1013,7 +1012,6 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
         keyBoardLayoutController.toggleVisibility();
     }
 
-    //显示隐藏虚拟手柄控制器
     public void toggleVirtualController(){
         if (virtualController==null) {
             initVirtualController();
