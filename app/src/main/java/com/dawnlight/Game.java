@@ -992,7 +992,6 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
         keyBoardLayoutController.show();
     }
 
-    //显示隐藏虚拟特殊按键
     public void toggleKeyboardController(){
         if (keyBoardController==null) {
             initKeyboardController();
@@ -1013,7 +1012,6 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
         keyBoardLayoutController.toggleVisibility();
     }
 
-    //显示隐藏虚拟手柄控制器
     public void toggleVirtualController(){
         if (virtualController==null) {
             initVirtualController();
@@ -1052,12 +1050,12 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
             }
             else {
-                // If we don't have a reason to lock to portrait or landscape, allow any orientation
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
             }
         }
-        else {
-            // Lock to current orientation
+        if (prefConfig.autoOrientation) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        } else {
             if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
             } else {
@@ -1730,9 +1728,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                         formatCurrentTime(System.currentTimeMillis())
                 );
             }
-
         }
-
         finish();
     }
 
