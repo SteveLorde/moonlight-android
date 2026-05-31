@@ -2,7 +2,7 @@ package com.dawnlight.grid.assets;
 
 import android.util.LruCache;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class MemoryAssetLoader {
 
         ScaledBitmap bmp = memoryCache.get(key);
         if (bmp != null) {
-            LimeLog.info("LRU cache hit for tuple: "+tuple);
+            AppLog.info("LRU cache hit for tuple: "+tuple);
             return bmp;
         }
 
@@ -45,7 +45,7 @@ public class MemoryAssetLoader {
         if (bmpRef != null) {
             bmp = bmpRef.get();
             if (bmp != null) {
-                LimeLog.info("Eviction cache hit for tuple: "+tuple);
+                AppLog.info("Eviction cache hit for tuple: "+tuple);
 
                 // Put this entry back into the LRU cache
                 evictionCache.remove(key);

@@ -505,8 +505,8 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
             streamView.setOnCapturedPointerListener(new View.OnCapturedPointerListener() {
                 @Override
                 public boolean onCapturedPointer(View view, MotionEvent motionEvent) {
-//                    LimeLog.info("onCapturedPointer="+motionEvent.toString());
-//                    LimeLog.info("onCapturedPointer-Device="+motionEvent.getDevice().toString());
+//                    AppLog.info("onCapturedPointer="+motionEvent.toString());
+//                    AppLog.info("onCapturedPointer-Device="+motionEvent.getDevice().toString());
                     return handleMotionEvent(view, motionEvent);
                 }
             });
@@ -690,7 +690,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
 
         // Set to the optimal mode for streaming
         float displayRefreshRate = prepareDisplayForRendering(currentDisplay);
-        LimeLog.info("Display refresh rate: "+displayRefreshRate);
+        AppLog.info("Display refresh rate: "+displayRefreshRate);
 
         // If the user requested frame pacing using a capped FPS, we will need to change our
         // desired FPS setting here in accordance with the active display refresh rate.
@@ -701,15 +701,15 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                 if (prefConfig.fps > roundedRefreshRate + 3) {
                     // Use frame drops when rendering above the screen frame rate
                     prefConfig.framePacing = PreferenceConfiguration.FRAME_PACING_BALANCED;
-                    LimeLog.info("Using drop mode for FPS > Hz");
+                    AppLog.info("Using drop mode for FPS > Hz");
                 } else if (roundedRefreshRate <= 49) {
                     // Let's avoid clearly bogus refresh rates and fall back to legacy rendering
                     prefConfig.framePacing = PreferenceConfiguration.FRAME_PACING_BALANCED;
-                    LimeLog.info("Bogus refresh rate: " + roundedRefreshRate);
+                    AppLog.info("Bogus refresh rate: " + roundedRefreshRate);
                 }
                 else {
                     chosenFrameRate = roundedRefreshRate - 1;
-                    LimeLog.info("Adjusting FPS target for screen to " + chosenFrameRate);
+                    AppLog.info("Adjusting FPS target for screen to " + chosenFrameRate);
                 }
             }
         }
@@ -1243,7 +1243,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                 requestMetaKeyEventMethod.invoke(manager, this.getComponentName(), enabled);
             }
             else {
-                LimeLog.warning("SemWindowManager.getInstance() returned null");
+                AppLog.warning("SemWindowManager.getInstance() returned null");
             }
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
@@ -1345,7 +1345,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
             boolean refreshRateIsGood = isRefreshRateGoodMatch(bestMode.getRefreshRate());
             boolean refreshRateIsEqual = isRefreshRateEqualMatch(bestMode.getRefreshRate());
 
-            LimeLog.info("Current display mode: "+bestMode.getPhysicalWidth()+"x"+
+            AppLog.info("Current display mode: "+bestMode.getPhysicalWidth()+"x"+
                     bestMode.getPhysicalHeight()+"x"+bestMode.getRefreshRate());
 
             for (Display.Mode candidate : currentDisplay.getSupportedModes()) {
@@ -1355,7 +1355,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                 boolean resolutionFitsStream = candidate.getPhysicalWidth() >= prefConfig.width &&
                         candidate.getPhysicalHeight() >= prefConfig.height;
 
-                LimeLog.info("Examining display mode: "+candidate.getPhysicalWidth()+"x"+
+                AppLog.info("Examining display mode: "+candidate.getPhysicalWidth()+"x"+
                         candidate.getPhysicalHeight()+"x"+candidate.getRefreshRate());
 
                 if (candidate.getPhysicalWidth() > 4096 && prefConfig.width <= 4096) {
@@ -1425,7 +1425,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                 refreshRateIsEqual = isRefreshRateEqualMatch(candidate.getRefreshRate());
             }
 
-            LimeLog.info("Best display mode: "+bestMode.getPhysicalWidth()+"x"+
+            AppLog.info("Best display mode: "+bestMode.getPhysicalWidth()+"x"+
                     bestMode.getPhysicalHeight()+"x"+bestMode.getRefreshRate());
 
             // Only apply new window layout parameters if we've actually changed the display mode
@@ -1442,11 +1442,11 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                     getWindow().setAttributes(windowLayoutParams);
                 }
                 else {
-                    LimeLog.info("Using setFrameRate() instead of preferredDisplayModeId due to matching resolution");
+                    AppLog.info("Using setFrameRate() instead of preferredDisplayModeId due to matching resolution");
                 }
             }
             else {
-                LimeLog.info("Current display mode is already the best display mode");
+                AppLog.info("Current display mode is already the best display mode");
             }
 
             displayRefreshRate = bestMode.getRefreshRate();
@@ -1455,7 +1455,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
         else {
             float bestRefreshRate = currentDisplay.getRefreshRate();
             for (float candidate : currentDisplay.getSupportedRefreshRates()) {
-                LimeLog.info("Examining refresh rate: "+candidate);
+                AppLog.info("Examining refresh rate: "+candidate);
 
                 if (candidate > bestRefreshRate) {
                     // Ensure the frame rate stays around 60 Hz for <= 60 FPS streams
@@ -1469,7 +1469,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                 }
             }
 
-            LimeLog.info("Selected refresh rate: "+bestRefreshRate);
+            AppLog.info("Selected refresh rate: "+bestRefreshRate);
             windowLayoutParams.preferredRefreshRate = bestRefreshRate;
             displayRefreshRate = bestRefreshRate;
 
@@ -1492,7 +1492,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
             double screenAspectRatio = ((double)screenSize.y) / screenSize.x;
             double streamAspectRatio = ((double)displayHeight) / displayWidth;
             if (Math.abs(screenAspectRatio - streamAspectRatio) < 0.001|| isOnExternalDisplay()) {
-                LimeLog.info("Stream has compatible aspect ratio with output display");
+                AppLog.info("Stream has compatible aspect ratio with output display");
                 aspectRatioMatch = true;
             }
         }
@@ -1502,8 +1502,8 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
             // Set the surface to scale based on the aspect ratio of the stream
             streamView.setDesiredAspectRatio((double)displayWidth / (double)displayHeight);
             streamView.setFillDisplay(prefConfig.videoScaleMode == PreferenceConfiguration.ScaleMode.FILL);
-            LimeLog.info("surfaceChanged-->"+(double)displayWidth / (double)displayHeight);
-            LimeLog.info("scaleMode-->"+prefConfig.videoScaleMode);
+            AppLog.info("surfaceChanged-->"+(double)displayWidth / (double)displayHeight);
+            AppLog.info("scaleMode-->"+prefConfig.videoScaleMode);
         }
 
         // Set the desired refresh rate that will get passed into setFrameRate() later
@@ -2182,7 +2182,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
 
     public boolean sendClipboard(boolean force) {
         if (httpConn == null) {
-            LimeLog.warning("httpConn not ready, cannot send clipboard!");
+            AppLog.warning("httpConn not ready, cannot send clipboard!");
             return false;
         }
 
@@ -2217,7 +2217,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
 
     public boolean getClipboard(int delay) {
         if (httpConn == null) {
-            LimeLog.warning("httpConn not ready, cannot get clipboard!");
+            AppLog.warning("httpConn not ready, cannot get clipboard!");
             return false;
         }
 
@@ -2282,7 +2282,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
         if (isOnExternalDisplay()) {
             ExternalDisplayControlActivity.toggleKeyboard();
         } else {
-            LimeLog.info("Toggling keyboard overlay");
+            AppLog.info("Toggling keyboard overlay");
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.toggleSoftInput(0, 0);
         }
@@ -3385,7 +3385,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
 
                 if (!displayedFailureDialog) {
                     displayedFailureDialog = true;
-                    LimeLog.severe(stage + " failed: " + errorCode);
+                    AppLog.severe(stage + " failed: " + errorCode);
 
                     // If video initialization failed and the surface is still valid, display extra information for the user
                     if (stage.contains("video") && streamView.getHolder().getSurface().isValid()) {
@@ -3461,7 +3461,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
 
                 if (!displayedFailureDialog) {
                     displayedFailureDialog = true;
-                    LimeLog.severe("Connection terminated: " + errorCode);
+                    AppLog.severe("Connection terminated: " + errorCode);
                     stopConnection();
 
                     // Display the error dialog if it was an unexpected termination.
@@ -3648,21 +3648,21 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
     @Override
     public void rumble(short controllerNumber, short lowFreqMotor, short highFreqMotor) {
         if (prefConfig.enableRumble) {
-            LimeLog.info(String.format((Locale)null, "Rumble on gamepad %d: %04x %04x", controllerNumber, lowFreqMotor, highFreqMotor));
+            AppLog.info(String.format((Locale)null, "Rumble on gamepad %d: %04x %04x", controllerNumber, lowFreqMotor, highFreqMotor));
             controllerHandler.handleRumble(controllerNumber, lowFreqMotor, highFreqMotor);
         }
     }
 
     @Override
     public void rumbleTriggers(short controllerNumber, short leftTrigger, short rightTrigger) {
-        LimeLog.info(String.format((Locale)null, "Rumble on gamepad triggers %d: %04x %04x", controllerNumber, leftTrigger, rightTrigger));
+        AppLog.info(String.format((Locale)null, "Rumble on gamepad triggers %d: %04x %04x", controllerNumber, leftTrigger, rightTrigger));
 
         controllerHandler.handleRumbleTriggers(controllerNumber, leftTrigger, rightTrigger);
     }
 
     @Override
     public void setHdrMode(boolean enabled, byte[] hdrMetadata) {
-        LimeLog.info("Display HDR mode: " + (enabled ? "enabled" : "disabled"));
+        AppLog.info("Display HDR mode: " + (enabled ? "enabled" : "disabled"));
         decoderRenderer.setHdrMode(enabled, hdrMetadata);
     }
 
@@ -3682,7 +3682,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
             throw new IllegalStateException("Surface changed before creation!");
         }
 
-        LimeLog.info("surfaceChanged-->"+width+" x "+height + "----"+displayWidth+" x "+displayHeight);
+        AppLog.info("surfaceChanged-->"+width+" x "+height + "----"+displayWidth+" x "+displayHeight);
 
         if (!attemptedConnection) {
             attemptedConnection = true;
@@ -3783,7 +3783,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                 buttonIndex = MouseButtonPacket.BUTTON_X2;
                 break;
             default:
-                LimeLog.warning("Unhandled button: "+buttonId);
+                AppLog.warning("Unhandled button: "+buttonId);
                 return;
         }
 

@@ -2,7 +2,7 @@ package com.dawnlight.grid.assets;
 
 import android.content.Context;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.binding.PlatformBinding;
 import com.dawnlight.nvstream.http.NvHTTP;
 import com.dawnlight.utils.ServerHelper;
@@ -29,10 +29,10 @@ public class NetworkAssetLoader {
         } catch (IOException ignored) {}
 
         if (in != null) {
-            LimeLog.info("Network asset load complete: " + tuple);
+            AppLog.info("Network asset load complete: " + tuple);
         }
         else {
-            LimeLog.info("Network asset load failed: " + tuple);
+            AppLog.info("Network asset load failed: " + tuple);
         }
 
         return in;

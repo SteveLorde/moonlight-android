@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.R;
 import com.dawnlight.binding.input.ControllerHandler;
 import com.dawnlight.preferences.PreferenceConfiguration;
@@ -190,7 +190,7 @@ public class VirtualController {
 
     private static final void _DBG(String text) {
         if (_PRINT_DEBUG_INFORMATION) {
-            LimeLog.info("VirtualController: " + text);
+            AppLog.info("VirtualController: " + text);
         }
     }
 

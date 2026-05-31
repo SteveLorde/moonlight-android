@@ -1,17 +1,27 @@
 package com.dawnlight.nvstream.http;
 
+import com.dawnlight.AppLog;
+
 import org.bouncycastle.crypto.BlockCipher;
 import org.bouncycastle.crypto.engines.AESLightEngine;
 import org.bouncycastle.crypto.params.KeyParameter;
-
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.dawnlight.LimeLog;
-
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.cert.Certificate;
-import java.io.*;
-import java.security.*;
-import java.security.cert.*;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -186,7 +196,7 @@ public class PairingManager {
         PairingHashAlgorithm hashAlgo;
 
         int serverMajorVersion = http.getServerMajorVersion(serverInfo);
-        LimeLog.info("Pairing with server generation: "+serverMajorVersion);
+        AppLog.info("Pairing with server generation: "+serverMajorVersion);
         if (serverMajorVersion >= 7) {
             // Gen 7+ uses SHA-256 hashing
             hashAlgo = new Sha256PairingHash();

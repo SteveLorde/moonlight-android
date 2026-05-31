@@ -15,7 +15,7 @@ import android.media.tv.TvContract;
 import android.net.Uri;
 import android.os.Build;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.PosterContentProvider;
 import com.dawnlight.R;
 import com.dawnlight.nvstream.http.ComputerDetails;
@@ -108,7 +108,7 @@ public class TvChannelHelper {
                 logo.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();
             } catch (SQLiteException | IOException e) {
-                LimeLog.warning("Failed to store the logo to the system content provider.");
+                AppLog.warning("Failed to store the logo to the system content provider.");
                 e.printStackTrace();
             }
         } finally {
@@ -250,9 +250,9 @@ public class TvChannelHelper {
                     } else {
                         int countDeleted = context.getContentResolver().delete(TvContract.buildPreviewProgramUri(id), null, null);
                         if (countDeleted > 0) {
-                            LimeLog.info("Preview program has been deleted");
+                            AppLog.info("Preview program has been deleted");
                         } else {
-                            LimeLog.warning("Preview program has not been deleted");
+                            AppLog.warning("Preview program has not been deleted");
                         }
                     }
                 }

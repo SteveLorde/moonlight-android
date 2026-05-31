@@ -7,7 +7,7 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.os.SystemClock;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.nvstream.input.ControllerPacket;
 import com.dawnlight.nvstream.jni.MoonBridge;
 
@@ -77,7 +77,7 @@ public abstract class AbstractXboxController extends AbstractController {
                         }
 
                         if (res == -1 && SystemClock.uptimeMillis() - lastMillis < 1000) {
-                            LimeLog.warning("Detected device I/O error");
+                            AppLog.warning("Detected device I/O error");
                             AbstractXboxController.this.stop();
                             break;
                         }
@@ -102,7 +102,7 @@ public abstract class AbstractXboxController extends AbstractController {
             UsbInterface iface = device.getInterface(i);
 
             if (!connection.claimInterface(iface, true)) {
-                LimeLog.warning("Failed to claim interfaces");
+                AppLog.warning("Failed to claim interfaces");
                 return false;
             }
         }
@@ -113,14 +113,14 @@ public abstract class AbstractXboxController extends AbstractController {
             UsbEndpoint endpt = iface.getEndpoint(i);
             if (endpt.getDirection() == UsbConstants.USB_DIR_IN) {
                 if (inEndpt != null) {
-                    LimeLog.warning("Found duplicate IN endpoint");
+                    AppLog.warning("Found duplicate IN endpoint");
                     return false;
                 }
                 inEndpt = endpt;
             }
             else if (endpt.getDirection() == UsbConstants.USB_DIR_OUT) {
                 if (outEndpt != null) {
-                    LimeLog.warning("Found duplicate OUT endpoint");
+                    AppLog.warning("Found duplicate OUT endpoint");
                     return false;
                 }
                 outEndpt = endpt;
@@ -129,7 +129,7 @@ public abstract class AbstractXboxController extends AbstractController {
 
         // Make sure the required endpoints were present
         if (inEndpt == null || outEndpt == null) {
-            LimeLog.warning("Missing required endpoint");
+            AppLog.warning("Missing required endpoint");
             return false;
         }
 
@@ -167,7 +167,7 @@ public abstract class AbstractXboxController extends AbstractController {
             UsbInterface iface = device.getInterface(i);
 
             if (!connection.releaseInterface(iface)) {
-                LimeLog.warning("Failed to release interfaces");
+                AppLog.warning("Failed to release interfaces");
             }
         }
 

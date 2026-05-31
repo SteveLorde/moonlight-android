@@ -2,6 +2,7 @@ package com.dawnlight.preferences;
 
 import static com.dawnlight.utils.ServerHelper.getActiveDisplay;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,27 +12,8 @@ import android.media.MediaCodecInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Vibrator;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.DialogFragment;
-import androidx.preference.CheckBoxPreference;
-import androidx.preference.EditTextPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-import androidx.preference.PreferenceScreen;
-
-import com.bytehamster.lib.preferencesearch.SearchConfiguration;
-import com.bytehamster.lib.preferencesearch.SearchPreferenceResult;
-import com.bytehamster.lib.preferencesearch.SearchPreference;
-import com.bytehamster.lib.preferencesearch.SearchPreferenceResultListener;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -47,11 +29,27 @@ import android.view.WindowInsets;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.dawnlight.DebugInfoActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.DialogFragment;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.PreferenceScreen;
+
+import com.bytehamster.lib.preferencesearch.SearchConfiguration;
+import com.bytehamster.lib.preferencesearch.SearchPreference;
+import com.bytehamster.lib.preferencesearch.SearchPreferenceResult;
+import com.bytehamster.lib.preferencesearch.SearchPreferenceResultListener;
+import com.dawnlight.AppLog;
 import com.dawnlight.BuildConfig;
+import com.dawnlight.DebugInfoActivity;
 import com.dawnlight.GameMenu;
-import com.dawnlight.LimeLog;
 import com.dawnlight.PcView;
 import com.dawnlight.R;
 import com.dawnlight.binding.input.virtual_controller.keyboard.KeyBoardControllerConfigurationLoader;
@@ -60,7 +58,10 @@ import com.dawnlight.utils.Dialog;
 import com.dawnlight.utils.FileUriUtils;
 import com.dawnlight.utils.PerformanceDataTracker;
 import com.dawnlight.utils.UiHelper;
+import com.google.gson.Gson;
+
 import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -555,7 +556,7 @@ public class StreamSettings extends AppCompatActivity implements SearchPreferenc
                 if (avcDecoder != null) {
                     Range<Integer> avcWidthRange = avcDecoder.getCapabilitiesForType("video/avc").getVideoCapabilities().getSupportedWidths();
 
-                    LimeLog.info("AVC supported width range: "+avcWidthRange.getLower()+" - "+avcWidthRange.getUpper());
+                    AppLog.info("AVC supported width range: "+avcWidthRange.getLower()+" - "+avcWidthRange.getUpper());
 
                     // If 720p is not reported as supported, ignore all results from this API
                     if (avcWidthRange.contains(1280)) {
@@ -574,7 +575,7 @@ public class StreamSettings extends AppCompatActivity implements SearchPreferenc
                 if (hevcDecoder != null) {
                     Range<Integer> hevcWidthRange = hevcDecoder.getCapabilitiesForType("video/hevc").getVideoCapabilities().getSupportedWidths();
 
-                    LimeLog.info("HEVC supported width range: "+hevcWidthRange.getLower()+" - "+hevcWidthRange.getUpper());
+                    AppLog.info("HEVC supported width range: "+hevcWidthRange.getLower()+" - "+hevcWidthRange.getUpper());
 
                     // If 720p is not reported as supported, ignore all results from this API
                     if (hevcWidthRange.contains(1280)) {
@@ -590,7 +591,7 @@ public class StreamSettings extends AppCompatActivity implements SearchPreferenc
                     }
                 }
 
-                LimeLog.info("Maximum resolution slot: "+maxSupportedResW);
+                AppLog.info("Maximum resolution slot: "+maxSupportedResW);
 
                 if (maxSupportedResW != 0) {
                     if (maxSupportedResW < 3840) {
@@ -647,7 +648,7 @@ public class StreamSettings extends AppCompatActivity implements SearchPreferenc
 
             // Remove HDR preference for devices below Nougat
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                LimeLog.info("Excluding HDR toggle based on OS");
+                AppLog.info("Excluding HDR toggle based on OS");
                 PreferenceCategory category =
                         (PreferenceCategory) findPreference("category_video_settings");
                 category.removePreference(findPreference("checkbox_enable_hdr"));
@@ -668,13 +669,13 @@ public class StreamSettings extends AppCompatActivity implements SearchPreferenc
                 }
 
                 if (!foundHdr10) {
-                    LimeLog.info("Excluding HDR toggle based on display capabilities");
+                    AppLog.info("Excluding HDR toggle based on display capabilities");
                     PreferenceCategory category =
                             (PreferenceCategory) findPreference("category_video_settings");
                     category.removePreference(findPreference("checkbox_enable_hdr"));
                 }
                 else if (PreferenceConfiguration.isShieldAtvFirmwareWithBrokenHdr()) {
-                    LimeLog.info("Disabling HDR toggle on old broken SHIELD TV firmware");
+                    AppLog.info("Disabling HDR toggle on old broken SHIELD TV firmware");
                     PreferenceCategory category =
                             (PreferenceCategory) findPreference("category_video_settings");
                     CheckBoxPreference hdrPref = (CheckBoxPreference) category.findPreference("checkbox_enable_hdr");

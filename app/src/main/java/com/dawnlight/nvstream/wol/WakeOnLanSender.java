@@ -1,13 +1,13 @@
 package com.dawnlight.nvstream.wol;
 
+import com.dawnlight.AppLog;
+import com.dawnlight.nvstream.http.ComputerDetails;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Scanner;
-
-import com.dawnlight.LimeLog;
-import com.dawnlight.nvstream.http.ComputerDetails;
 
 public class WakeOnLanSender {
     // These ports will always be tried as-is.
@@ -120,7 +120,7 @@ public class WakeOnLanSender {
                 try {
                     macBytes[i] = (byte) Integer.parseInt(scan.next(), 16);
                 } catch (NumberFormatException e) {
-                    LimeLog.warning("Malformed MAC address: " + macAddress + " (index: " + i + ")");
+                    AppLog.warning("Malformed MAC address: " + macAddress + " (index: " + i + ")");
                     break;
                 }
             }

@@ -41,9 +41,9 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.dawnlight.AppLog;
 import com.dawnlight.Game;
 import com.dawnlight.GameMenu;
-import com.dawnlight.LimeLog;
 import com.dawnlight.R;
 import com.dawnlight.StartExternalDisplayControlReceiver;
 import com.dawnlight.binding.input.virtual_controller.keyboard.KeyBoardLayoutController;
@@ -135,7 +135,7 @@ public class ExternalDisplayControlActivity extends AppCompatActivity implements
 
                     startActivity(gameIntent, options.toBundle());
                 } else {
-                    LimeLog.warning(getString(R.string.no_external_display));
+                    AppLog.warning(getString(R.string.no_external_display));
                     startActivity(gameIntent);
                     finish();
                 }
@@ -446,7 +446,7 @@ public class ExternalDisplayControlActivity extends AppCompatActivity implements
      * Toggles the visibility of the on-screen software keyboard.
      */
     private void _toggleKeyboard() {
-        LimeLog.info("Toggling keyboard overlay on ExternalDisplayControlActivity");
+        AppLog.info("Toggling keyboard overlay on ExternalDisplayControlActivity");
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.toggleSoftInput(0, 0);
     }

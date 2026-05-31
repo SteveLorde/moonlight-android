@@ -49,7 +49,7 @@ public class KeyboardAccessibilityService extends AccessibilityService {
 
     @Override
     public void onServiceConnected() {
-        LimeLog.info("Keyboard service is connected");
+        AppLog.info("Keyboard service is connected");
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
         info.packageNames = new String[] { BuildConfig.APPLICATION_ID };
         info.eventTypes = AccessibilityEvent.TYPES_ALL_MASK;
@@ -61,7 +61,7 @@ public class KeyboardAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-//        LimeLog.info("onAccessibilityEvent:"+accessibilityEvent.toString());
+//        AppLog.info("onAccessibilityEvent:"+accessibilityEvent.toString());
     }
     @Override
     public void onInterrupt() {

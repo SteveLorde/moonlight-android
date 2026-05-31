@@ -17,7 +17,7 @@ import android.os.IBinder;
 import android.view.InputDevice;
 import android.widget.Toast;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.R;
 import com.dawnlight.preferences.PreferenceConfiguration;
 
@@ -185,7 +185,7 @@ public class UsbDriverService extends Service implements UsbDriverListener {
             // Open the device
             UsbDeviceConnection connection = usbManager.openDevice(device);
             if (connection == null) {
-                LimeLog.warning("Unable to open USB device: "+device.getDeviceName());
+                AppLog.warning("Unable to open USB device: "+device.getDeviceName());
                 return;
             }
 
@@ -241,7 +241,7 @@ public class UsbDriverService extends Service implements UsbDriverListener {
 
     public static boolean kernelSupportsXboxOne() {
         String kernelVersion = System.getProperty("os.version");
-        LimeLog.info("Kernel Version: "+kernelVersion);
+        AppLog.info("Kernel Version: "+kernelVersion);
 
         if (kernelVersion == null) {
             // We'll assume this is some newer version of Android
@@ -285,7 +285,7 @@ public class UsbDriverService extends Service implements UsbDriverListener {
     }
 
     public static boolean shouldClaimDevice(UsbDevice device, boolean claimAllAvailable) {
-        LimeLog.info("UsbDevice info: "+device.toString());
+        AppLog.info("UsbDevice info: "+device.toString());
         return ((!kernelSupportsXboxOne() || !isRecognizedInputDevice(device) || claimAllAvailable) && XboxOneController.canClaimDevice(device)) ||
                 ((!isRecognizedInputDevice(device) || claimAllAvailable) && Xbox360Controller.canClaimDevice(device)) ||
                 // We must not call isRecognizedInputDevice() because wireless controllers don't share the same product ID as the dongle

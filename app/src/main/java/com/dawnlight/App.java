@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import com.dawnlight.profiles.ProfilesManager;
 
-public class ArtemisApplication extends Application {
+public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

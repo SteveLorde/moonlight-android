@@ -7,7 +7,7 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.os.SystemClock;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.nvstream.input.ControllerPacket;
 import com.dawnlight.nvstream.jni.MoonBridge;
 
@@ -65,22 +65,22 @@ public class ProConController extends AbstractController {
             boolean handshakeSuccess = handshake();
 
             if (!handshakeSuccess) {
-                LimeLog.info("ProCon: Initial handshake failed!");
+                AppLog.info("ProCon: Initial handshake failed!");
                 ProConController.this.stop();
                 return;
             }
 
-            LimeLog.info("ProCon: handshake " + handshakeSuccess);
-            LimeLog.info("ProCon: highspeed " + highSpeed());
-            LimeLog.info("ProCon: handshake " + handshake());
-            LimeLog.info("ProCon: loadstickcalibration " + loadStickCalibration());
-            LimeLog.info("ProCon: enablevibration " + enableVibration(true));
-            LimeLog.info("ProCon: setinutreportmode " + setInputReportMode((byte)0x30));
-            LimeLog.info("ProCon: forceusb " + forceUSB());
-            LimeLog.info("ProCon: setplayerled " + setPlayerLED(getControllerId() + 1));
-            LimeLog.info("ProCon: enableimu " + enableIMU(true));
+            AppLog.info("ProCon: handshake " + handshakeSuccess);
+            AppLog.info("ProCon: highspeed " + highSpeed());
+            AppLog.info("ProCon: handshake " + handshake());
+            AppLog.info("ProCon: loadstickcalibration " + loadStickCalibration());
+            AppLog.info("ProCon: enablevibration " + enableVibration(true));
+            AppLog.info("ProCon: setinutreportmode " + setInputReportMode((byte)0x30));
+            AppLog.info("ProCon: forceusb " + forceUSB());
+            AppLog.info("ProCon: setplayerled " + setPlayerLED(getControllerId() + 1));
+            AppLog.info("ProCon: enableimu " + enableIMU(true));
 
-            LimeLog.info("ProCon: initialized!");
+            AppLog.info("ProCon: initialized!");
 
             notifyDeviceAdded();
 
@@ -94,7 +94,7 @@ public class ProConController extends AbstractController {
                         res = -1;
                     }
                     if (res == -1 && SystemClock.uptimeMillis() - lastMillis < 1000) {
-                        LimeLog.warning("Detected device I/O error");
+                        AppLog.warning("Detected device I/O error");
                         ProConController.this.stop();
                         break;
                     }
@@ -157,7 +157,7 @@ public class ProConController extends AbstractController {
                 continue;
             }
 
-//            LimeLog.warning("ProCon: Sent: " + toHexadecimal(data, data.length));
+//            AppLog.warning("ProCon: Sent: " + toHexadecimal(data, data.length));
 
             // Wait for response
             int res;
@@ -170,7 +170,7 @@ public class ProConController extends AbstractController {
                     return true;
                 }
             } while (retries < 20 && res > 0 && !Thread.currentThread().isInterrupted() && !stopped);
-            LimeLog.warning("ProCon: Failed to get subcmd reply: " + res + " bytes received, " + String.format((Locale)null, "0x%02x, 0x%02x", buffer[0], buffer[14]));
+            AppLog.warning("ProCon: Failed to get subcmd reply: " + res + " bytes received, " + String.format((Locale)null, "0x%02x, 0x%02x", buffer[0], buffer[14]));
             return false;
         }
 
@@ -213,7 +213,7 @@ public class ProConController extends AbstractController {
         for (int i = 0; i < device.getInterfaceCount(); i++) {
             UsbInterface iface = device.getInterface(i);
             if (!connection.claimInterface(iface, true)) {
-                LimeLog.warning("Failed to claim interfaces");
+                AppLog.warning("Failed to claim interfaces");
                 return false;
             }
         }
@@ -229,7 +229,7 @@ public class ProConController extends AbstractController {
         }
 
         if (inEndpt == null || outEndpt == null) {
-            LimeLog.warning("Missing required endpoint");
+            AppLog.warning("Missing required endpoint");
             return false;
         }
 
@@ -354,7 +354,7 @@ public class ProConController extends AbstractController {
         };
 
         if (!sendSubcommand((byte) 0x10, address, buffer)) {
-            LimeLog.warning("ProCon: Failed to receive SPI Flash data.");
+            AppLog.warning("ProCon: Failed to receive SPI Flash data.");
             return false;
         }
 
@@ -379,11 +379,11 @@ public class ProConController extends AbstractController {
 
         if (checkUserCalMagic(USER_LS_MAGIC_OFFSET)) {
             ls_addr = USER_LS_CALIBRATION_OFFSET;
-            LimeLog.info("ProCon: LS has user calibration!");
+            AppLog.info("ProCon: LS has user calibration!");
         }
         if (checkUserCalMagic(USER_RS_MAGIC_OFFSET)) {
             rs_addr = USER_RS_CALIBRATION_OFFSET;
-            LimeLog.info("ProCon: RS has user calibration!");
+            AppLog.info("ProCon: RS has user calibration!");
         }
 
         boolean ls_calibrated = false;
@@ -440,10 +440,10 @@ public class ProConController extends AbstractController {
             applyDefaultCalibration(1);
         }
 
-//        LimeLog.info(String.format("ProCon: LS X: %04x, %04x, %04x", stickCalibration[0][0][0], stickCalibration[0][0][1], stickCalibration[0][0][2]));
-//        LimeLog.info(String.format("ProCon: LS Y: %04x, %04x, %04x", stickCalibration[0][1][0], stickCalibration[0][1][1], stickCalibration[0][1][2]));
-//        LimeLog.info(String.format("ProCon: RS X: %04x, %04x, %04x", stickCalibration[1][0][0], stickCalibration[1][0][1], stickCalibration[1][0][2]));
-//        LimeLog.info(String.format("ProCon: RS Y: %04x, %04x, %04x", stickCalibration[1][1][0], stickCalibration[1][1][1], stickCalibration[1][1][2]));
+//        AppLog.info(String.format("ProCon: LS X: %04x, %04x, %04x", stickCalibration[0][0][0], stickCalibration[0][0][1], stickCalibration[0][0][2]));
+//        AppLog.info(String.format("ProCon: LS Y: %04x, %04x, %04x", stickCalibration[0][1][0], stickCalibration[0][1][1], stickCalibration[0][1][2]));
+//        AppLog.info(String.format("ProCon: RS X: %04x, %04x, %04x", stickCalibration[1][0][0], stickCalibration[1][0][1], stickCalibration[1][0][2]));
+//        AppLog.info(String.format("ProCon: RS Y: %04x, %04x, %04x", stickCalibration[1][1][0], stickCalibration[1][1][1], stickCalibration[1][1][2]));
 
         return true;
     }

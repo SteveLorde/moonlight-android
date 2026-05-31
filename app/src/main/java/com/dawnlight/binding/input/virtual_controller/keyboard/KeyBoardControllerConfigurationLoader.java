@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
+import com.dawnlight.AppLog;
 import com.dawnlight.GameMenu;
-import com.dawnlight.LimeLog;
 import com.dawnlight.R;
 import com.dawnlight.nvstream.NvConnection;
 import com.dawnlight.nvstream.input.KeyboardPacket;
@@ -477,7 +477,7 @@ public class KeyBoardControllerConfigurationLoader {
                             w, w
                     );
                 }
-                LimeLog.info("x:" + x + ",y:" + y + ",W&H:" + w + "," + screenScale(BUTTON_SIZE, height));
+                AppLog.info("x:" + x + ",y:" + y + ",W&H:" + w + "," + screenScale(BUTTON_SIZE, height));
             }
 
             // Custom keys

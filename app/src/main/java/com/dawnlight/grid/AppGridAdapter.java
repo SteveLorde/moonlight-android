@@ -8,8 +8,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dawnlight.AppLog;
 import com.dawnlight.AppView;
-import com.dawnlight.LimeLog;
 import com.dawnlight.R;
 import com.dawnlight.grid.assets.CachedAppAssetLoader;
 import com.dawnlight.grid.assets.DiskAssetLoader;
@@ -99,7 +99,7 @@ public class AppGridAdapter extends GenericGridAdapter<AppView.AppObject> {
             // We don't want to make them bigger before draw-time
             scalingDivisor = 1.0;
         }
-        LimeLog.info("Art scaling divisor: " + scalingDivisor);
+        AppLog.info("Art scaling divisor: " + scalingDivisor);
 
         if (loader != null) {
             // Cancel operations on the old loader

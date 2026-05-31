@@ -21,7 +21,7 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.R;
 import com.dawnlight.nvstream.http.ComputerDetails;
 import com.dawnlight.preferences.PreferenceConfiguration;
@@ -38,7 +38,7 @@ public class UiHelper {
             GameManager gameManager = context.getSystemService(GameManager.class);
 
             if (gameManager == null) {
-                LimeLog.warning("GameManager is null, maybe your system does not support it?");
+                AppLog.warning("GameManager is null, maybe your system does not support it?");
                 return;
             }
 

@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+import com.dawnlight.AppLog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.dawnlight.LimeLog;
 
 import java.io.File;
 import java.io.FileReader;
@@ -44,7 +44,7 @@ public class ProfilesManager {
     }
 
     public boolean load(Context context) {
-        LimeLog.info("ArtemisProfile: Loading profile...");
+        AppLog.info("ArtemisProfile: Loading profile...");
         if (context == null) {
             return false;
         }
@@ -83,12 +83,12 @@ public class ProfilesManager {
                     activeProfileId = data.activeProfileId;
                 }
             } catch (IOException e) {
-                LimeLog.warning("ArtemisProfile: Failed to load profiles from file:" + e);
+                AppLog.warning("ArtemisProfile: Failed to load profiles from file:" + e);
                 e.printStackTrace();
                 return false;
             }
         } catch (Exception e) {
-            LimeLog.warning("ArtemisProfile: Failed to load profiles:" + e);
+            AppLog.warning("ArtemisProfile: Failed to load profiles:" + e);
             e.printStackTrace();
             return false;
         }
@@ -114,12 +114,12 @@ public class ProfilesManager {
                 data.activeProfileId = activeProfileId;
                 gson.toJson(data, writer);
             } catch (IOException e) {
-                LimeLog.warning("ArtemisProfile: Failed to save profiles to file:" + e);
+                AppLog.warning("ArtemisProfile: Failed to save profiles to file:" + e);
                 e.printStackTrace();
                 return false;
             }
         } catch (Exception e) {
-            LimeLog.warning("ArtemisProfile: Failed to save profiles:" + e);
+            AppLog.warning("ArtemisProfile: Failed to save profiles:" + e);
             e.printStackTrace();
             return false;
         }

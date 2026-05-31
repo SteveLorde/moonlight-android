@@ -1,10 +1,38 @@
 package com.dawnlight;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.UnknownHostException;
+import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.res.Configuration;
+import android.opengl.GLSurfaceView;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
 import com.dawnlight.binding.PlatformBinding;
 import com.dawnlight.binding.crypto.AndroidCryptoProvider;
 import com.dawnlight.computers.ComputerManagerListener;
@@ -29,41 +57,13 @@ import com.dawnlight.utils.HelpLauncher;
 import com.dawnlight.utils.ServerHelper;
 import com.dawnlight.utils.ShortcutHelper;
 import com.dawnlight.utils.UiHelper;
-
-import android.app.ActivityManager;
-import android.app.AlertDialog;
-import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.res.Configuration;
-import android.opengl.GLSurfaceView;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.UnknownHostException;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -225,7 +225,7 @@ public class PcView extends AppCompatActivity implements AdapterFragmentCallback
                     glPrefs.savedFingerprint = Build.FINGERPRINT;
                     glPrefs.writePreferences();
 
-                    LimeLog.info("Fetched GL Renderer: " + glPrefs.glRenderer);
+                    AppLog.info("Fetched GL Renderer: " + glPrefs.glRenderer);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -246,7 +246,7 @@ public class PcView extends AppCompatActivity implements AdapterFragmentCallback
             setContentView(surfaceView);
         }
         else {
-            LimeLog.info("Cached GL Renderer: " + glPrefs.glRenderer);
+            AppLog.info("Cached GL Renderer: " + glPrefs.glRenderer);
             completeOnCreate();
         }
 
@@ -750,7 +750,7 @@ public class PcView extends AppCompatActivity implements AdapterFragmentCallback
 
             case DELETE_ID:
                 if (ActivityManager.isUserAMonkey()) {
-                    LimeLog.info("Ignoring delete PC request from monkey");
+                    AppLog.info("Ignoring delete PC request from monkey");
                     return true;
                 }
                 UiHelper.displayDeletePcConfirmationDialog(this, computer.details, new Runnable() {

@@ -1,5 +1,23 @@
 package com.dawnlight.binding.crypto;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.util.Base64;
+
+import com.dawnlight.AppLog;
+import com.dawnlight.nvstream.http.LimelightCryptoProvider;
+
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.X500NameBuilder;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,24 +41,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x500.X500NameBuilder;
-import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.cert.X509v3CertificateBuilder;
-import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
-import org.bouncycastle.operator.ContentSigner;
-import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Base64;
-
-import com.dawnlight.LimeLog;
-import com.dawnlight.nvstream.http.LimelightCryptoProvider;
 
 public class AndroidCryptoProvider implements LimelightCryptoProvider {
 
@@ -85,7 +85,7 @@ public class AndroidCryptoProvider implements LimelightCryptoProvider {
 
         // If either file was missing, we definitely can't succeed
         if (certBytes == null || keyBytes == null) {
-            LimeLog.info("Missing cert or key; need to generate a new one");
+            AppLog.info("Missing cert or key; need to generate a new one");
             return false;
         }
 
@@ -97,13 +97,13 @@ public class AndroidCryptoProvider implements LimelightCryptoProvider {
             key = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(keyBytes));
         } catch (CertificateException e) {
             // May happen if the cert is corrupt
-            LimeLog.warning("Corrupted certificate");
+            AppLog.warning("Corrupted certificate");
             return false;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (InvalidKeySpecException e) {
             // May happen if the key is corrupt
-            LimeLog.warning("Corrupted key");
+            AppLog.warning("Corrupted key");
             return false;
         }
 
@@ -149,7 +149,7 @@ public class AndroidCryptoProvider implements LimelightCryptoProvider {
             throw new RuntimeException(e);
         }
 
-        LimeLog.info("Generated a new key pair");
+        AppLog.info("Generated a new key pair");
 
         // Save the resulting pair
         saveCertKeyPair();
@@ -180,7 +180,7 @@ public class AndroidCryptoProvider implements LimelightCryptoProvider {
             // Write the private out in PKCS8 format
             keyOut.write(key.getEncoded());
 
-            LimeLog.info("Saved generated key pair to disk");
+            AppLog.info("Saved generated key pair to disk");
         } catch (IOException e) {
             // This isn't good because it means we'll have
             // to re-pair next time

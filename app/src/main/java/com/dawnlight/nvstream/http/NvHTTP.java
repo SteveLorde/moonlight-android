@@ -1,5 +1,16 @@
 package com.dawnlight.nvstream.http;
 
+import com.dawnlight.AppLog;
+import com.dawnlight.BuildConfig;
+import com.dawnlight.nvstream.ConnectionContext;
+import com.dawnlight.nvstream.http.PairingManager.PairState;
+import com.dawnlight.nvstream.jni.MoonBridge;
+import com.dawnlight.utils.DeviceUtils;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,17 +50,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import com.dawnlight.BuildConfig;
-import com.dawnlight.LimeLog;
-import com.dawnlight.nvstream.ConnectionContext;
-import com.dawnlight.nvstream.http.PairingManager.PairState;
-import com.dawnlight.nvstream.jni.MoonBridge;
-import com.dawnlight.utils.DeviceUtils;
 
 import okhttp3.ConnectionPool;
 import okhttp3.HttpUrl;
@@ -528,13 +528,13 @@ public class NvHTTP {
             resp.close();
 
             if (verbose && !path.equals("serverinfo")) {
-                LimeLog.info(getCompleteUrl(baseUrl, path, query)+" -> "+respString);
+                AppLog.info(getCompleteUrl(baseUrl, path, query)+" -> "+respString);
             }
 
             return respString;
         } catch (IOException e) {
             if (verbose && !path.equals("serverinfo")) {
-                LimeLog.warning(getCompleteUrl(baseUrl, path, query)+" -> "+e.getMessage());
+                AppLog.warning(getCompleteUrl(baseUrl, path, query)+" -> "+e.getMessage());
                 e.printStackTrace();
             }
             
@@ -772,7 +772,7 @@ public class NvHTTP {
             
             // Remove uninitialized apps
             if (!app.isInitialized()) {
-                LimeLog.warning("GFE returned incomplete app: "+app.getAppId()+" "+app.getAppName());
+                AppLog.warning("GFE returned incomplete app: "+app.getAppId()+" "+app.getAppName());
                 i.remove();
             }
         }
@@ -870,7 +870,7 @@ public class NvHTTP {
             if (context.negotiatedWidth * context.negotiatedHeight > 1280 * 720 &&
                     context.negotiatedWidth * context.negotiatedHeight != 1920 * 1080 &&
                     context.negotiatedWidth * context.negotiatedHeight != 3840 * 2160) {
-                LimeLog.info("Disabling SOPS due to non-standard resolution: "+context.negotiatedWidth+"x"+context.negotiatedHeight);
+                AppLog.info("Disabling SOPS due to non-standard resolution: "+context.negotiatedWidth+"x"+context.negotiatedHeight);
                 enableSops = false;
             }
         }

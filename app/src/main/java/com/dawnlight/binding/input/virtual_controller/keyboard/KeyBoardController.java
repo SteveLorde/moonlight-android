@@ -23,9 +23,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.dawnlight.AppLog;
 import com.dawnlight.Game;
 import com.dawnlight.GameMenu;
-import com.dawnlight.LimeLog;
 import com.dawnlight.R;
 import com.dawnlight.nvstream.NvConnection;
 import com.dawnlight.preferences.PreferenceConfiguration;
@@ -307,7 +307,7 @@ public class KeyBoardController {
 
     private static final void _DBG(String text) {
         if (_PRINT_DEBUG_INFORMATION) {
-            LimeLog.info("VirtualController: " + text);
+            AppLog.info("VirtualController: " + text);
         }
     }
 
@@ -661,10 +661,10 @@ public class KeyBoardController {
                             vibrate(KeyEvent.ACTION_DOWN);
                             
                         } catch (JSONException e) {
-                            LimeLog.warning("Error adding key: " + e.getMessage());
+                            AppLog.warning("Error adding key: " + e.getMessage());
                             e.printStackTrace();
                         } catch (Exception e) {
-                            LimeLog.warning("Unexpected error adding key: " + e.getMessage());
+                            AppLog.warning("Unexpected error adding key: " + e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -692,7 +692,7 @@ public class KeyBoardController {
             builder.show();
 
         } catch (Exception e) {
-            LimeLog.warning("Error loading keyboard configuration: " + e.getMessage());
+            AppLog.warning("Error loading keyboard configuration: " + e.getMessage());
             e.printStackTrace();
             Toast.makeText(context, context.getString(R.string.keyboard_load_error, e.getMessage()), Toast.LENGTH_SHORT).show();
         }

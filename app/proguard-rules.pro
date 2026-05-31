@@ -1,4 +1,4 @@
-# Don't obfuscate code
+# General
 -dontobfuscate
 
 # Our code

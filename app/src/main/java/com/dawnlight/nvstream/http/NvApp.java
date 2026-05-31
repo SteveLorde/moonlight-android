@@ -1,6 +1,6 @@
 package com.dawnlight.nvstream.http;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 
 public class NvApp {
     public static final String REMOTE_INPUT_UUID = "8CB5C136-DA67-4F99-B4A1-F9CD35005CF4";
@@ -38,7 +38,7 @@ public class NvApp {
             this.appId = Integer.parseInt(appId);
             this.initialized = true;
         } catch (NumberFormatException e) {
-            LimeLog.warning("Malformed app ID: "+appId);
+            AppLog.warning("Malformed app ID: "+appId);
         }
     }
 
@@ -47,7 +47,7 @@ public class NvApp {
             this.appIndex = Integer.parseInt(appIndex);
             this.initialized = true;
         } catch (NumberFormatException e) {
-            LimeLog.warning("Malformed app index: "+appIndex);
+            AppLog.warning("Malformed app index: "+appIndex);
         }
     }
 

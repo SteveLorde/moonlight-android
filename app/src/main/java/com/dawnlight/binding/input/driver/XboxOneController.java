@@ -4,7 +4,7 @@ import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.nvstream.input.ControllerPacket;
 import com.dawnlight.nvstream.jni.MoonBridge;
 
@@ -116,7 +116,7 @@ public class XboxOneController extends AbstractXboxController {
         {
             case 0x20:
                 if (buffer.remaining() < 17) {
-                    LimeLog.severe("XBone button/axis read too small: "+buffer.remaining());
+                    AppLog.severe("XBone button/axis read too small: "+buffer.remaining());
                     return false;
                 }
 
@@ -126,7 +126,7 @@ public class XboxOneController extends AbstractXboxController {
 
             case 0x07:
                 if (buffer.remaining() < 4) {
-                    LimeLog.severe("XBone mode read too small: "+buffer.remaining());
+                    AppLog.severe("XBone mode read too small: "+buffer.remaining());
                     return false;
                 }
 
@@ -147,12 +147,12 @@ public class XboxOneController extends AbstractXboxController {
     }
 
     public static boolean canClaimDevice(UsbDevice device) {
-//        LimeLog.info("UsbDevice->vid:" + device.getVendorId());
-//        LimeLog.info("UsbDevice->count:" + device.getInterfaceCount());
+//        AppLog.info("UsbDevice->vid:" + device.getVendorId());
+//        AppLog.info("UsbDevice->count:" + device.getInterfaceCount());
 //        if(device.getInterfaceCount()>0){
-//            LimeLog.info("UsbDevice->0:" + device.getInterface(0).getInterfaceClass());
-//            LimeLog.info("UsbDevice->0:" + device.getInterface(0).getInterfaceSubclass());
-//            LimeLog.info("UsbDevice->0:" + device.getInterface(0).getInterfaceProtocol());
+//            AppLog.info("UsbDevice->0:" + device.getInterface(0).getInterfaceClass());
+//            AppLog.info("UsbDevice->0:" + device.getInterface(0).getInterfaceSubclass());
+//            AppLog.info("UsbDevice->0:" + device.getInterface(0).getInterfaceProtocol());
 //        }
         for (int supportedVid : SUPPORTED_VENDORS) {
             if (device.getVendorId() == supportedVid &&
@@ -187,7 +187,7 @@ public class XboxOneController extends AbstractXboxController {
             // Send the initialization packet
             int res = connection.bulkTransfer(outEndpt, data, data.length, 3000);
             if (res != data.length) {
-                LimeLog.warning("Initialization transfer failed: "+res);
+                AppLog.warning("Initialization transfer failed: "+res);
                 return false;
             }
         }
@@ -207,7 +207,7 @@ public class XboxOneController extends AbstractXboxController {
         };
         int res = connection.bulkTransfer(outEndpt, data, data.length, 100);
         if (res != data.length) {
-            LimeLog.warning("Rumble transfer failed: "+res);
+            AppLog.warning("Rumble transfer failed: "+res);
         }
     }
 

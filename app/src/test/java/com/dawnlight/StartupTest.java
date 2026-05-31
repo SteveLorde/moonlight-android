@@ -1,5 +1,10 @@
 package com.dawnlight;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import android.content.Context;
 import android.content.Intent;
 
@@ -16,8 +21,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.File;
-
-import static org.junit.Assert.*;
 
 @Config(sdk = {33}, shadows = {com.dawnlight.shadows.ShadowMoonBridge.class, com.dawnlight.shadows.ShadowGameManager.class})
 @RunWith(RobolectricTestRunner.class)
@@ -48,8 +51,8 @@ public class StartupTest {
 
     @Test
     public void testApplicationStartup() {
-        // Test ArtemisApplication creation and initialization
-        ArtemisApplication app = new ArtemisApplication();
+        // Test App creation and initialization
+        App app = new App();
         app.onCreate();
 
         // Verify ProfilesManager was initialized

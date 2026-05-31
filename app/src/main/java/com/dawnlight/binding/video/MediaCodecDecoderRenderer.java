@@ -1,35 +1,14 @@
 package com.dawnlight.binding.video;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.jcodec.codecs.h264.H264Utils;
-import org.jcodec.codecs.h264.io.model.SeqParameterSet;
-import org.jcodec.codecs.h264.io.model.VUIParameters;
-
-import com.dawnlight.BuildConfig;
-import com.dawnlight.LimeLog;
-import com.dawnlight.R;
-import com.dawnlight.nvstream.av.video.VideoDecoderRenderer;
-import com.dawnlight.nvstream.jni.MoonBridge;
-import com.dawnlight.preferences.PreferenceConfiguration;
-import com.dawnlight.utils.TrafficStatsHelper;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaCodec;
-import android.media.MediaCodecInfo;
-import android.media.MediaFormat;
 import android.media.MediaCodec.BufferInfo;
 import android.media.MediaCodec.CodecException;
+import android.media.MediaCodecInfo;
+import android.media.MediaFormat;
 import android.net.TrafficStats;
 import android.os.Build;
 import android.os.Handler;
@@ -39,6 +18,27 @@ import android.os.SystemClock;
 import android.util.Range;
 import android.view.Choreographer;
 import android.view.Surface;
+
+import com.dawnlight.AppLog;
+import com.dawnlight.BuildConfig;
+import com.dawnlight.R;
+import com.dawnlight.nvstream.av.video.VideoDecoderRenderer;
+import com.dawnlight.nvstream.jni.MoonBridge;
+import com.dawnlight.preferences.PreferenceConfiguration;
+import com.dawnlight.utils.TrafficStatsHelper;
+
+import org.jcodec.codecs.h264.H264Utils;
+import org.jcodec.codecs.h264.io.model.SeqParameterSet;
+import org.jcodec.codecs.h264.io.model.VUIParameters;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements Choreographer.FrameCallback {
 
@@ -239,23 +239,23 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
         MediaCodecInfo hevcDecoderInfo = MediaCodecHelper.findProbableSafeDecoder("video/hevc", -1);
         if (hevcDecoderInfo != null) {
             if (!MediaCodecHelper.decoderIsWhitelistedForHevc(hevcDecoderInfo)) {
-                LimeLog.info("Found HEVC decoder, but it's not whitelisted - "+hevcDecoderInfo.getName());
+                AppLog.info("Found HEVC decoder, but it's not whitelisted - "+hevcDecoderInfo.getName());
 
                 // Force HEVC enabled if the user asked for it
                 if (prefs.videoFormat == PreferenceConfiguration.FormatOption.FORCE_HEVC) {
-                    LimeLog.info("Forcing HEVC enabled despite non-whitelisted decoder");
+                    AppLog.info("Forcing HEVC enabled despite non-whitelisted decoder");
                 }
                 // HDR implies HEVC forced on, since HEVCMain10HDR10 is required for HDR.
                 else if (requestedHdr) {
-                    LimeLog.info("Forcing HEVC enabled for HDR streaming");
+                    AppLog.info("Forcing HEVC enabled for HDR streaming");
                 }
                 // > 4K streaming also requires HEVC, so force it on there too.
                 else if (initialWidth > 4096 || initialHeight > 4096) {
-                    LimeLog.info("Forcing HEVC enabled for over 4K streaming");
+                    AppLog.info("Forcing HEVC enabled for over 4K streaming");
                 }
                 // Use HEVC if the H.264 decoder is unable to meet the performance point
                 else if (avcDecoder != null && decoderCanMeetPerformancePointWithHevcAndNotAvc(hevcDecoderInfo, avcDecoder, prefs)) {
-                    LimeLog.info("Using non-whitelisted HEVC decoder to meet performance point");
+                    AppLog.info("Using non-whitelisted HEVC decoder to meet performance point");
                 }
                 else {
                     return null;
@@ -275,19 +275,19 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
         MediaCodecInfo decoderInfo = MediaCodecHelper.findProbableSafeDecoder("video/av01", -1);
         if (decoderInfo != null) {
             if (!MediaCodecHelper.isDecoderWhitelistedForAv1(decoderInfo)) {
-                LimeLog.info("Found AV1 decoder, but it's not whitelisted - "+decoderInfo.getName());
+                AppLog.info("Found AV1 decoder, but it's not whitelisted - "+decoderInfo.getName());
 
                 // Force HEVC enabled if the user asked for it
                 if (prefs.videoFormat == PreferenceConfiguration.FormatOption.FORCE_AV1) {
-                    LimeLog.info("Forcing AV1 enabled despite non-whitelisted decoder");
+                    AppLog.info("Forcing AV1 enabled despite non-whitelisted decoder");
                 }
                 // Use AV1 if the HEVC decoder is unable to meet the performance point
                 else if (hevcDecoder != null && decoderCanMeetPerformancePointWithAv1AndNotHevc(decoderInfo, hevcDecoder, prefs)) {
-                    LimeLog.info("Using non-whitelisted AV1 decoder to meet performance point");
+                    AppLog.info("Using non-whitelisted AV1 decoder to meet performance point");
                 }
                 // Use AV1 if the H.264 decoder is unable to meet the performance point and we have no HEVC decoder
                 else if (hevcDecoder == null && decoderCanMeetPerformancePointWithAv1AndNotAvc(decoderInfo, avcDecoder, prefs)) {
-                    LimeLog.info("Using non-whitelisted AV1 decoder to meet performance point");
+                    AppLog.info("Using non-whitelisted AV1 decoder to meet performance point");
                 }
                 else {
                     return null;
@@ -323,26 +323,26 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
 
         avcDecoder = findAvcDecoder();
         if (avcDecoder != null) {
-            LimeLog.info("Selected AVC decoder: "+avcDecoder.getName());
+            AppLog.info("Selected AVC decoder: "+avcDecoder.getName());
         }
         else {
-            LimeLog.warning("No AVC decoder found");
+            AppLog.warning("No AVC decoder found");
         }
 
         hevcDecoder = findHevcDecoder(prefs, meteredData, requestedHdr);
         if (hevcDecoder != null) {
-            LimeLog.info("Selected HEVC decoder: "+hevcDecoder.getName());
+            AppLog.info("Selected HEVC decoder: "+hevcDecoder.getName());
         }
         else {
-            LimeLog.info("No HEVC decoder found");
+            AppLog.info("No HEVC decoder found");
         }
 
         av1Decoder = findAv1Decoder(prefs);
         if (av1Decoder != null) {
-            LimeLog.info("Selected AV1 decoder: "+av1Decoder.getName());
+            AppLog.info("Selected AV1 decoder: "+av1Decoder.getName());
         }
         else {
-            LimeLog.info("No AV1 decoder found");
+            AppLog.info("No AV1 decoder found");
         }
 
         // Set attributes that are queried in getCapabilities(). This must be done here
@@ -356,12 +356,12 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
             avcOptimalSlicesPerFrame = MediaCodecHelper.getDecoderOptimalSlicesPerFrame(avcDecoder.getName());
 
             if (directSubmit) {
-                LimeLog.info("Decoder "+avcDecoder.getName()+" will use direct submit");
+                AppLog.info("Decoder "+avcDecoder.getName()+" will use direct submit");
             }
             if (refFrameInvalidationAvc) {
-                LimeLog.info("Decoder "+avcDecoder.getName()+" will use reference frame invalidation for AVC");
+                AppLog.info("Decoder "+avcDecoder.getName()+" will use reference frame invalidation for AVC");
             }
-            LimeLog.info("Decoder "+avcDecoder.getName()+" wants "+avcOptimalSlicesPerFrame+" slices per frame");
+            AppLog.info("Decoder "+avcDecoder.getName()+" wants "+avcOptimalSlicesPerFrame+" slices per frame");
         }
 
         if (hevcDecoder != null) {
@@ -369,27 +369,27 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
             hevcOptimalSlicesPerFrame = MediaCodecHelper.getDecoderOptimalSlicesPerFrame(hevcDecoder.getName());
 
             if (refFrameInvalidationHevc) {
-                LimeLog.info("Decoder "+hevcDecoder.getName()+" will use reference frame invalidation for HEVC");
+                AppLog.info("Decoder "+hevcDecoder.getName()+" will use reference frame invalidation for HEVC");
             }
 
-            LimeLog.info("Decoder "+hevcDecoder.getName()+" wants "+hevcOptimalSlicesPerFrame+" slices per frame");
+            AppLog.info("Decoder "+hevcDecoder.getName()+" wants "+hevcOptimalSlicesPerFrame+" slices per frame");
         }
 
         if (av1Decoder != null) {
             refFrameInvalidationAv1 = MediaCodecHelper.decoderSupportsRefFrameInvalidationAv1(av1Decoder);
 
             if (refFrameInvalidationAv1) {
-                LimeLog.info("Decoder "+av1Decoder.getName()+" will use reference frame invalidation for AV1");
+                AppLog.info("Decoder "+av1Decoder.getName()+" will use reference frame invalidation for AV1");
             }
         }
 
         // Use the larger of the two slices per frame preferences
         optimalSlicesPerFrame = (byte)Math.max(avcOptimalSlicesPerFrame, hevcOptimalSlicesPerFrame);
-        LimeLog.info("Requesting "+optimalSlicesPerFrame+" slices per frame");
+        AppLog.info("Requesting "+optimalSlicesPerFrame+" slices per frame");
 
         if (consecutiveCrashCount % 2 == 1) {
             refFrameInvalidationAvc = refFrameInvalidationHevc = false;
-            LimeLog.warning("Disabling RFI due to previous crash");
+            AppLog.warning("Disabling RFI due to previous crash");
         }
     }
 
@@ -408,7 +408,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
 
         for (MediaCodecInfo.CodecProfileLevel profileLevel : hevcDecoder.getCapabilitiesForType("video/hevc").profileLevels) {
             if (profileLevel.profile == MediaCodecInfo.CodecProfileLevel.HEVCProfileMain10HDR10) {
-                LimeLog.info("HEVC decoder "+hevcDecoder.getName()+" supports HEVC Main10 HDR10");
+                AppLog.info("HEVC decoder "+hevcDecoder.getName()+" supports HEVC Main10 HDR10");
                 return true;
             }
         }
@@ -427,7 +427,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
 
         for (MediaCodecInfo.CodecProfileLevel profileLevel : av1Decoder.getCapabilitiesForType("video/av01").profileLevels) {
             if (profileLevel.profile == MediaCodecInfo.CodecProfileLevel.AV1ProfileMain10HDR10) {
-                LimeLog.info("AV1 decoder "+av1Decoder.getName()+" supports AV1 Main 10 HDR10");
+                AppLog.info("AV1 decoder "+av1Decoder.getName()+" supports AV1 Main 10 HDR10");
                 return true;
             }
         }
@@ -543,7 +543,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
             }
         }
 
-        LimeLog.info("Configuring with format: "+format);
+        AppLog.info("Configuring with format: "+format);
 
         videoDecoder.configure(format, renderTarget, null, 0);
 
@@ -558,7 +558,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // This will contain the actual accepted input format attributes
             inputFormat = videoDecoder.getInputFormat();
-            LimeLog.info("Input format: "+inputFormat);
+            AppLog.info("Input format: "+inputFormat);
         }
 
         videoDecoder.setVideoScalingMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
@@ -576,7 +576,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
         try {
             videoDecoder = MediaCodec.createByCodecName(selectedDecoderInfo.getName());
             configureAndStartDecoder(format);
-            LimeLog.info("Using codec " + selectedDecoderInfo.getName() + " for hardware decoding " + format.getString(MediaFormat.KEY_MIME));
+            AppLog.info("Using codec " + selectedDecoderInfo.getName() + " for hardware decoding " + format.getString(MediaFormat.KEY_MIME));
             configured = true;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -611,12 +611,12 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
             selectedDecoderInfo = avcDecoder;
 
             if (avcDecoder == null) {
-                LimeLog.severe("No available AVC decoder!");
+                AppLog.severe("No available AVC decoder!");
                 return -1;
             }
 
             if (initialWidth > 4096 || initialHeight > 4096) {
-                LimeLog.severe("> 4K streaming only supported on HEVC");
+                AppLog.severe("> 4K streaming only supported on HEVC");
                 return -1;
             }
 
@@ -626,16 +626,16 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
             constrainedHighProfile = MediaCodecHelper.decoderNeedsConstrainedHighProfile(selectedDecoderInfo.getName());
             isExynos4 = MediaCodecHelper.isExynos4Device();
             if (needsSpsBitstreamFixup) {
-                LimeLog.info("Decoder "+selectedDecoderInfo.getName()+" needs SPS bitstream restrictions fixup");
+                AppLog.info("Decoder "+selectedDecoderInfo.getName()+" needs SPS bitstream restrictions fixup");
             }
             if (needsBaselineSpsHack) {
-                LimeLog.info("Decoder "+selectedDecoderInfo.getName()+" needs baseline SPS hack");
+                AppLog.info("Decoder "+selectedDecoderInfo.getName()+" needs baseline SPS hack");
             }
             if (constrainedHighProfile) {
-                LimeLog.info("Decoder "+selectedDecoderInfo.getName()+" needs constrained high profile");
+                AppLog.info("Decoder "+selectedDecoderInfo.getName()+" needs constrained high profile");
             }
             if (isExynos4) {
-                LimeLog.info("Decoder "+selectedDecoderInfo.getName()+" is on Exynos 4");
+                AppLog.info("Decoder "+selectedDecoderInfo.getName()+" is on Exynos 4");
             }
 
             refFrameInvalidationActive = refFrameInvalidationAvc;
@@ -645,7 +645,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
             selectedDecoderInfo = hevcDecoder;
 
             if (hevcDecoder == null) {
-                LimeLog.severe("No available HEVC decoder!");
+                AppLog.severe("No available HEVC decoder!");
                 return -2;
             }
 
@@ -656,7 +656,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
             selectedDecoderInfo = av1Decoder;
 
             if (av1Decoder == null) {
-                LimeLog.severe("No available AV1 decoder!");
+                AppLog.severe("No available AV1 decoder!");
                 return -2;
             }
 
@@ -664,14 +664,14 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
         }
         else {
             // Unknown format
-            LimeLog.severe("Unknown format");
+            AppLog.severe("Unknown format");
             return -3;
         }
         adaptivePlayback = MediaCodecHelper.decoderSupportsAdaptivePlayback(selectedDecoderInfo, mimeType);
         fusedIdrFrame = MediaCodecHelper.decoderSupportsFusedIdrFrame(selectedDecoderInfo, mimeType);
 
         for (int tryNumber = 0;; tryNumber++) {
-            LimeLog.info("Decoder configuration try: "+tryNumber);
+            AppLog.info("Decoder configuration try: "+tryNumber);
 
             MediaFormat mediaFormat = createBaseMediaFormat(mimeType);
             // This will try low latency options until we find one that works (or we give up).
@@ -680,7 +680,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
 //            MediaCodecInfo.CodecCapabilities codecCapabilities = selectedDecoderInfo.getCapabilitiesForType(mimeType);
 //            int[] colorFormats=codecCapabilities.colorFormats;
 //            for (int colorFormat : colorFormats) {
-//                LimeLog.info("Decoder configuration colorFormats: "+colorFormat);
+//                AppLog.info("Decoder configuration colorFormats: "+colorFormat);
 //            }
             // Throw the underlying codec exception on the last attempt if the caller requested it
             if (tryConfigureDecoder(selectedDecoderInfo, mediaFormat, !newFormat && throwOnCodecError)) {
@@ -748,7 +748,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
 
                 // If we just need a flush, do so now with all threads quiesced.
                 if (codecRecoveryType.get() == CR_RECOVERY_TYPE_FLUSH) {
-                    LimeLog.warning("Flushing decoder");
+                    AppLog.warning("Flushing decoder");
                     try {
                         videoDecoder.flush();
                         codecRecoveryType.set(CR_RECOVERY_TYPE_NONE);
@@ -764,12 +764,12 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                 // We don't count flushes as codec recovery attempts
                 if (codecRecoveryType.get() != CR_RECOVERY_TYPE_NONE) {
                     codecRecoveryAttempts++;
-                    LimeLog.info("Codec recovery attempt: "+codecRecoveryAttempts);
+                    AppLog.info("Codec recovery attempt: "+codecRecoveryAttempts);
                 }
 
                 // For "recoverable" exceptions, we can just stop, reconfigure, and restart.
                 if (codecRecoveryType.get() == CR_RECOVERY_TYPE_RESTART) {
-                    LimeLog.warning("Trying to restart decoder after CodecException");
+                    AppLog.warning("Trying to restart decoder after CodecException");
                     try {
                         videoDecoder.stop();
                         configureAndStartDecoder(configuredFormat);
@@ -792,7 +792,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                 // For "non-recoverable" exceptions on L+, we can call reset() to recover
                 // without having to recreate the entire decoder again.
                 if (codecRecoveryType.get() == CR_RECOVERY_TYPE_RESET && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    LimeLog.warning("Trying to reset decoder after CodecException");
+                    AppLog.warning("Trying to reset decoder after CodecException");
                     try {
                         videoDecoder.reset();
                         configureAndStartDecoder(configuredFormat);
@@ -814,7 +814,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                 // If we _still_ haven't managed to recover, go for the nuclear option and just
                 // throw away the old decoder and reinitialize a new one from scratch.
                 if (codecRecoveryType.get() == CR_RECOVERY_TYPE_RESET) {
-                    LimeLog.warning("Trying to recreate decoder after CodecException");
+                    AppLog.warning("Trying to recreate decoder after CodecException");
                     videoDecoder.release();
 
                     try {
@@ -848,7 +848,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                 // The final thread to be quiesced will handle the codec recovery.
                 while (codecRecoveryType.get() != CR_RECOVERY_TYPE_NONE) {
                     try {
-                        LimeLog.info("Waiting to quiesce decoder threads: "+codecRecoveryThreadQuiescedFlags);
+                        AppLog.info("Waiting to quiesce decoder threads: "+codecRecoveryThreadQuiescedFlags);
                         codecRecoveryMonitor.wait(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -879,11 +879,11 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
 
             if (codecExc.isTransient()) {
                 // We'll let transient exceptions go
-                LimeLog.warning(codecExc.getDiagnosticInfo());
+                AppLog.warning(codecExc.getDiagnosticInfo());
                 return true;
             }
 
-            LimeLog.severe(codecExc.getDiagnosticInfo());
+            AppLog.severe(codecExc.getDiagnosticInfo());
 
             // We can attempt a recovery or reset at this stage to try to start decoding again
             if (codecRecoveryAttempts < CR_MAX_TRIES) {
@@ -891,11 +891,11 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                 // If we have no prior unrecoverable failure, we will try a restart instead.
                 if (codecExc.isRecoverable()) {
                     if (codecRecoveryType.compareAndSet(CR_RECOVERY_TYPE_NONE, CR_RECOVERY_TYPE_RESTART)) {
-                        LimeLog.info("Decoder requires restart for recoverable CodecException");
+                        AppLog.info("Decoder requires restart for recoverable CodecException");
                         e.printStackTrace();
                     }
                     else if (codecRecoveryType.compareAndSet(CR_RECOVERY_TYPE_FLUSH, CR_RECOVERY_TYPE_RESTART)) {
-                        LimeLog.info("Decoder flush promoted to restart for recoverable CodecException");
+                        AppLog.info("Decoder flush promoted to restart for recoverable CodecException");
                         e.printStackTrace();
                     }
                     else if (codecRecoveryType.get() != CR_RECOVERY_TYPE_RESET && codecRecoveryType.get() != CR_RECOVERY_TYPE_RESTART) {
@@ -904,15 +904,15 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                 }
                 else if (!codecExc.isRecoverable()) {
                     if (codecRecoveryType.compareAndSet(CR_RECOVERY_TYPE_NONE, CR_RECOVERY_TYPE_RESET)) {
-                        LimeLog.info("Decoder requires reset for non-recoverable CodecException");
+                        AppLog.info("Decoder requires reset for non-recoverable CodecException");
                         e.printStackTrace();
                     }
                     else if (codecRecoveryType.compareAndSet(CR_RECOVERY_TYPE_FLUSH, CR_RECOVERY_TYPE_RESET)) {
-                        LimeLog.info("Decoder flush promoted to reset for non-recoverable CodecException");
+                        AppLog.info("Decoder flush promoted to reset for non-recoverable CodecException");
                         e.printStackTrace();
                     }
                     else if (codecRecoveryType.compareAndSet(CR_RECOVERY_TYPE_RESTART, CR_RECOVERY_TYPE_RESET)) {
-                        LimeLog.info("Decoder restart promoted to reset for non-recoverable CodecException");
+                        AppLog.info("Decoder restart promoted to reset for non-recoverable CodecException");
                         e.printStackTrace();
                     }
                     else if (codecRecoveryType.get() != CR_RECOVERY_TYPE_RESET) {
@@ -931,15 +931,15 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
             // NB: CodecException is an IllegalStateException, so we must check for it first.
             if (codecRecoveryAttempts < CR_MAX_TRIES) {
                 if (codecRecoveryType.compareAndSet(CR_RECOVERY_TYPE_NONE, CR_RECOVERY_TYPE_RESET)) {
-                    LimeLog.info("Decoder requires reset for IllegalStateException");
+                    AppLog.info("Decoder requires reset for IllegalStateException");
                     e.printStackTrace();
                 }
                 else if (codecRecoveryType.compareAndSet(CR_RECOVERY_TYPE_FLUSH, CR_RECOVERY_TYPE_RESET)) {
-                    LimeLog.info("Decoder flush promoted to reset for IllegalStateException");
+                    AppLog.info("Decoder flush promoted to reset for IllegalStateException");
                     e.printStackTrace();
                 }
                 else if (codecRecoveryType.compareAndSet(CR_RECOVERY_TYPE_RESTART, CR_RECOVERY_TYPE_RESET)) {
-                    LimeLog.info("Decoder restart promoted to reset for IllegalStateException");
+                    AppLog.info("Decoder restart promoted to reset for IllegalStateException");
                     e.printStackTrace();
                 }
                 else if (codecRecoveryType.get() != CR_RECOVERY_TYPE_RESET) {
@@ -1143,9 +1143,9 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                                 case MediaCodec.INFO_TRY_AGAIN_LATER:
                                     break;
                                 case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
-                                    LimeLog.info("Output format changed");
+                                    AppLog.info("Output format changed");
                                     outputFormat = videoDecoder.getOutputFormat();
-                                    LimeLog.info("New output format: " + outputFormat);
+                                    AppLog.info("New output format: " + outputFormat);
                                     break;
                                 default:
                                     break;
@@ -1217,7 +1217,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
         int deltaMs = (int)(SystemClock.uptimeMillis() - startTime);
 
         if (deltaMs >= 20) {
-            LimeLog.warning("Dequeue input buffer ran long: " + deltaMs + " ms");
+            AppLog.warning("Dequeue input buffer ran long: " + deltaMs + " ms");
         }
 
         if (nextInputBuffer == null) {
@@ -1392,7 +1392,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
         // reduce delay and buffering accordingly. Some devices (Marvell, Exynos 4) don't
         // like it so we only set them on devices that are confirmed to benefit from it.
         if (sps.profileIdc == 100 && constrainedHighProfile) {
-            LimeLog.info("Setting constraint set flags for constrained high profile");
+            AppLog.info("Setting constraint set flags for constrained high profile");
             sps.constraintSet4Flag = true;
             sps.constraintSet5Flag = true;
         }
@@ -1553,17 +1553,17 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                 if (!refFrameInvalidationActive) {
                     if (initialWidth <= 720 && initialHeight <= 480 && refreshRate <= 60) {
                         // Max 5 buffered frames at 720x480x60
-                        LimeLog.info("Patching level_idc to 31");
+                        AppLog.info("Patching level_idc to 31");
                         sps.levelIdc = 31;
                     }
                     else if (initialWidth <= 1280 && initialHeight <= 720 && refreshRate <= 60) {
                         // Max 5 buffered frames at 1280x720x60
-                        LimeLog.info("Patching level_idc to 32");
+                        AppLog.info("Patching level_idc to 32");
                         sps.levelIdc = 32;
                     }
                     else if (initialWidth <= 1920 && initialHeight <= 1080 && refreshRate <= 60) {
                         // Max 4 buffered frames at 1920x1080x64
-                        LimeLog.info("Patching level_idc to 42");
+                        AppLog.info("Patching level_idc to 42");
                         sps.levelIdc = 42;
                     }
                     else {
@@ -1581,7 +1581,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                 // It does break reference frame invalidation, so we will not do that for decoders
                 // where we've enabled reference frame invalidation.
                 if (!refFrameInvalidationActive) {
-                    LimeLog.info("Patching num_ref_frames in SPS");
+                    AppLog.info("Patching num_ref_frames in SPS");
                     sps.numRefFrames = 1;
                 }
 
@@ -1605,13 +1605,13 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
 
                     // If the encoder didn't include VUI parameters in the SPS, add them now
                     if (sps.vuiParams == null) {
-                        LimeLog.info("Adding VUI parameters");
+                        AppLog.info("Adding VUI parameters");
                         sps.vuiParams = new VUIParameters();
                     }
 
                     // GFE 2.5.11 started sending bitstream restrictions
                     if (sps.vuiParams.bitstreamRestriction == null) {
-                        LimeLog.info("Adding bitstream restrictions");
+                        AppLog.info("Adding bitstream restrictions");
                         sps.vuiParams.bitstreamRestriction = new VUIParameters.BitstreamRestriction();
                         sps.vuiParams.bitstreamRestriction.motionVectorsOverPicBoundariesFlag = true;
                         sps.vuiParams.bitstreamRestriction.maxBytesPerPicDenom = 2;
@@ -1621,7 +1621,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                         sps.vuiParams.bitstreamRestriction.numReorderFrames = 0;
                     }
                     else {
-                        LimeLog.info("Patching bitstream restrictions");
+                        AppLog.info("Patching bitstream restrictions");
                     }
 
                     // Some devices throw errors if maxDecFrameBuffering < numRefFrames
@@ -1646,7 +1646,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
 
                 // If we need to hack this SPS to say we're baseline, do so now
                 if (needsBaselineSpsHack) {
-                    LimeLog.info("Hacking SPS to baseline");
+                    AppLog.info("Hacking SPS to baseline");
                     sps.profileIdc = 66;
                     savedSps = sps;
                 }
@@ -1732,7 +1732,7 @@ public class MediaCodecDecoderRenderer extends VideoDecoderRenderer implements C
                             return MoonBridge.DR_NEED_IDR;
                         }
 
-                        LimeLog.info("SPS replay complete");
+                        AppLog.info("SPS replay complete");
                     }
                 }
             }

@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.os.Build;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 import com.dawnlight.utils.CacheHelper;
 
 import java.io.File;
@@ -68,7 +68,7 @@ public class DiskAssetLoader {
 
         // Make sure the cached asset doesn't exceed the maximum size
         if (file.length() > MAX_ASSET_SIZE) {
-            LimeLog.warning("Removing cached tuple exceeding size threshold: "+tuple);
+            AppLog.warning("Removing cached tuple exceeding size threshold: "+tuple);
             file.delete();
             return null;
         }
@@ -86,7 +86,7 @@ public class DiskAssetLoader {
                 return null;
             }
 
-            LimeLog.info("Tuple "+tuple+" has cached art of size: "+decodeOnlyOptions.outWidth+"x"+decodeOnlyOptions.outHeight);
+            AppLog.info("Tuple "+tuple+" has cached art of size: "+decodeOnlyOptions.outWidth+"x"+decodeOnlyOptions.outHeight);
 
             // Load the image scaled to the appropriate size
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -103,7 +103,7 @@ public class DiskAssetLoader {
 
             bmp = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
             if (bmp != null) {
-                LimeLog.info("Tuple "+tuple+" decoded from disk cache with sample size: "+options.inSampleSize);
+                AppLog.info("Tuple "+tuple+" decoded from disk cache with sample size: "+options.inSampleSize);
                 return new ScaledBitmap(decodeOnlyOptions.outWidth, decodeOnlyOptions.outHeight, bmp);
             }
         }
@@ -168,7 +168,7 @@ public class DiskAssetLoader {
             e.printStackTrace();
         } finally {
             if (!success) {
-                LimeLog.warning("Unable to populate cache with tuple: "+tuple);
+                AppLog.warning("Unable to populate cache with tuple: "+tuple);
                 CacheHelper.deleteCacheFile(cacheDir, "boxart", tuple.computer.uuid, tuple.app.getAppId() + ".png");
             }
         }

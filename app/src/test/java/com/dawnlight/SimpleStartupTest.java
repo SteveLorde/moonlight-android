@@ -1,7 +1,15 @@
 package com.dawnlight;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import android.content.Context;
+
 import androidx.test.core.app.ApplicationProvider;
+
 import com.dawnlight.profiles.ProfilesManager;
 
 import org.junit.Before;
@@ -12,8 +20,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.File;
-
-import static org.junit.Assert.*;
 
 @Config(sdk = {33}, shadows = {com.dawnlight.shadows.ShadowMoonBridge.class, com.dawnlight.shadows.ShadowGameManager.class})
 @RunWith(RobolectricTestRunner.class)
@@ -45,7 +51,7 @@ public class SimpleStartupTest {
     @Test
     public void testApplicationCreation() {
         // Test basic application creation
-        ArtemisApplication app = new ArtemisApplication();
+        App app = new App();
         assertNotNull("Application should be created", app);
     }
 
@@ -54,7 +60,7 @@ public class SimpleStartupTest {
         // Test application onCreate which initializes ProfilesManager
         // After the fix, this should no longer crash
         try {
-            ArtemisApplication app = new ArtemisApplication();
+            App app = new App();
             app.onCreate();
 
             // Should now work without crashing

@@ -250,8 +250,8 @@ public class KeyBoardTouchPadButton extends keyBoardVirtualControllerElement {
                         onClickCallback();
                     }
                 }
-//                LimeLog.info("touchPadSensitivity"+preferenceConfiguration.touchPadSensitivity);
-//                LimeLog.info("onElementTouchEvent:" + deltaX + "," + deltaY);
+//                AppLog.info("touchPadSensitivity"+preferenceConfiguration.touchPadSensitivity);
+//                AppLog.info("onElementTouchEvent:" + deltaX + "," + deltaY);
                 onMoveCallback((int) (deltaX*0.01f*preferenceConfiguration.touchPadSensitivity), (int) (deltaY*0.01f*preferenceConfiguration.touchPadYSensitity));
                 if (deltaX != 0) {
                     lastTouchX = (int) event.getX();

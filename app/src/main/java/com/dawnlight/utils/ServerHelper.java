@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.dawnlight.AppLog;
 import com.dawnlight.AppView;
 import com.dawnlight.Game;
-import com.dawnlight.LimeLog;
 import com.dawnlight.R;
 import com.dawnlight.ShortcutTrampoline;
 import com.dawnlight.binding.PlatformBinding;
@@ -77,7 +77,7 @@ public class ServerHelper {
         int mainDisplayId = Display.DEFAULT_DISPLAY;
         int secondaryDisplayId = -1;
         for (Display displayVariant : displays) {
-            LimeLog.info(displayVariant.toString());
+            AppLog.info(displayVariant.toString());
             if (displayVariant.getDisplayId() != mainDisplayId) {
                 secondaryDisplayId = displayVariant.getDisplayId();
                 break;

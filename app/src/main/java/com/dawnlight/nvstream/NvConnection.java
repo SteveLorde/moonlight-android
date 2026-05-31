@@ -13,6 +13,20 @@ import android.net.NetworkInfo;
 import android.net.RouteInfo;
 import android.os.Build;
 
+import com.dawnlight.AppLog;
+import com.dawnlight.nvstream.av.audio.AudioRenderer;
+import com.dawnlight.nvstream.av.video.VideoDecoderRenderer;
+import com.dawnlight.nvstream.http.ComputerDetails;
+import com.dawnlight.nvstream.http.HostHttpResponseException;
+import com.dawnlight.nvstream.http.LimelightCryptoProvider;
+import com.dawnlight.nvstream.http.NvApp;
+import com.dawnlight.nvstream.http.NvHTTP;
+import com.dawnlight.nvstream.http.PairingManager;
+import com.dawnlight.nvstream.input.MouseButtonPacket;
+import com.dawnlight.nvstream.jni.MoonBridge;
+
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -26,20 +40,6 @@ import java.util.concurrent.Semaphore;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-import com.dawnlight.LimeLog;
-import com.dawnlight.nvstream.av.audio.AudioRenderer;
-import com.dawnlight.nvstream.av.video.VideoDecoderRenderer;
-import com.dawnlight.nvstream.http.ComputerDetails;
-import com.dawnlight.nvstream.http.HostHttpResponseException;
-import com.dawnlight.nvstream.http.LimelightCryptoProvider;
-import com.dawnlight.nvstream.http.NvApp;
-import com.dawnlight.nvstream.http.NvHTTP;
-import com.dawnlight.nvstream.http.PairingManager;
-import com.dawnlight.nvstream.input.MouseButtonPacket;
-import com.dawnlight.nvstream.jni.MoonBridge;
 
 public class NvConnection {
     // Context parameters
@@ -300,7 +300,7 @@ public class NvConnection {
         
         // If the client did not provide an exact app ID, do a lookup with the applist
         if (!context.streamConfig.getApp().isInitialized()) {
-            LimeLog.info("Using deprecated app lookup method - Please specify an app ID in your StreamConfiguration instead");
+            AppLog.info("Using deprecated app lookup method - Please specify an app ID in your StreamConfiguration instead");
             app = h.getAppByName(context.streamConfig.getApp().getAppName());
             if (app == null) {
                 context.connListener.displayMessage("The app " + context.streamConfig.getApp().getAppName() + " is not in GFE app list");
@@ -340,7 +340,7 @@ public class NvConnection {
                 }
             }
             
-            LimeLog.info("Resumed existing game session");
+            AppLog.info("Resumed existing game session");
             return true;
         }
         else {
@@ -378,7 +378,7 @@ public class NvConnection {
             return false;
         }
         
-        LimeLog.info("Launched new game session");
+        AppLog.info("Launched new game session");
         
         return true;
     }

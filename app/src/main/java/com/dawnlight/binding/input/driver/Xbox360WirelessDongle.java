@@ -7,7 +7,7 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.view.InputDevice;
 
-import com.dawnlight.LimeLog;
+import com.dawnlight.AppLog;
 
 public class Xbox360WirelessDongle extends AbstractController {
     private UsbDevice device;
@@ -57,14 +57,14 @@ public class Xbox360WirelessDongle extends AbstractController {
 
         int res = connection.bulkTransfer(endpoint, commandBuffer, commandBuffer.length, 3000);
         if (res != commandBuffer.length) {
-            LimeLog.warning("LED set transfer failed: "+res);
+            AppLog.warning("LED set transfer failed: "+res);
         }
     }
 
     private void sendLedCommandToInterface(UsbInterface iface, int controllerIndex) {
         // Claim this interface to kick xpad off it (temporarily)
         if (!connection.claimInterface(iface, true)) {
-            LimeLog.warning("Failed to claim interface: "+iface.getId());
+            AppLog.warning("Failed to claim interface: "+iface.getId());
             return;
         }
 
